@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 
-class ButtonScreen extends Component {
+export default class ButtonScreen extends Component {
   constructor(props) {
     super(props)
     this.state = { count: 0 }

@@ -12,35 +12,28 @@ import {
   View
 } from 'react-native';
 
-import createStackNavigator from 'react-navigation';
-
+import { createStackNavigator } from 'react-navigation';
+import ButtonScreen from './screens/ButtonScreen';
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-      </View>
+      <NavigationStack/>
     );
   }
 }
 
-const NavigationStack = createStackNavigator({
+const NavigationStack = createStackNavigator(
   {
-    home: 'ButtonScreen',
-    chart: 'ChartScreen',
-    profile: 'ProfileScreen'
+    home: ButtonScreen,
+    // chart: ChartScreen,
+    // profile: ProfileScreen
   },
   {
     initialRouteName: 'home'
   }
-});
+);
 
 const styles = StyleSheet.create({
   container: {
