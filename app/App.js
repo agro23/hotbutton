@@ -14,12 +14,14 @@ import {
 
 import { createStackNavigator } from 'react-navigation';
 import ButtonScreen from './screens/ButtonScreen';
+import ChartScreen from './screens/ChartScreen';
+
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <NavigationStack/>
+        <NavigationStack/>
     );
   }
 }
@@ -27,7 +29,7 @@ export default class App extends Component<Props> {
 const NavigationStack = createStackNavigator(
   {
     home: ButtonScreen,
-    // chart: ChartScreen,
+    chart: ChartScreen,
     // profile: ProfileScreen
   },
   {

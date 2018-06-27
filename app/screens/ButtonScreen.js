@@ -5,7 +5,10 @@ import {
   TouchableOpacity,
   Text,
   View,
+  Button
 } from 'react-native'
+
+import NavBar from '../components/NavBar';
 
 export default class ButtonScreen extends Component {
   constructor(props) {
@@ -19,20 +22,19 @@ export default class ButtonScreen extends Component {
     });
   }
 
- render() {
-   return (
-     <View style={styles.container}>
-       <TouchableOpacity
-         style={styles.circle}
-         onPress={this.onPress}
-       >
-         <Text style={styles.alignMe}> Push </Text>
-       </TouchableOpacity>
-       <View style={[styles.countContainer]}>
-         <Text style={[styles.countText]}>
-            { this.state.count !== 0 ? this.state.count: null}
-          </Text>
-        </View>
+  render() {
+    return (
+      <View style={styles.container}>
+        <NavBar/>
+        <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
+          <TouchableOpacity style={styles.circle} onPress={this.onPress}>
+            <Text style={styles.alignMe}> Push </Text>
+          </TouchableOpacity>
+          <View style={[styles.countContainer]}>
+            <Text style={[styles.countText]}>
+              { this.state.count !== 0 ? this.state.count: null}
+            </Text>
+          </View>
       </View>
     )
   }
