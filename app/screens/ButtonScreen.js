@@ -26,7 +26,6 @@ export default class ButtonScreen extends Component {
     return (
       <View style={styles.container}>
         <NavBar/>
-        <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
           <TouchableOpacity style={styles.circle} onPress={this.onPress}>
             <Text style={styles.alignMe}> Push </Text>
           </TouchableOpacity>

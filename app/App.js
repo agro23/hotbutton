@@ -15,13 +15,14 @@ import {
 import { createStackNavigator } from 'react-navigation';
 import ButtonScreen from './screens/ButtonScreen';
 import ChartScreen from './screens/ChartScreen';
-
+import ProfileScreen from './screens/ProfileScreen';
+import BluetoothScreen from './screens/BluetoothScreen';
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-        <NavigationStack/>
+      <NavigationStack/>
     );
   }
 }
@@ -30,13 +31,15 @@ const NavigationStack = createStackNavigator(
   {
     home: ButtonScreen,
     chart: ChartScreen,
-    // profile: ProfileScreen
+    profile: ProfileScreen,
+    bluetooth: BluetoothScreen
   },
   {
     initialRouteName: 'home'
   }
 );
 
+//not using these right now, leaving as example
 const styles = StyleSheet.create({
   container: {
     flex: 1,

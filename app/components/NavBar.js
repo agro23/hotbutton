@@ -6,7 +6,9 @@ import {
   Button
 } from 'react-native';
 
-export default class NavBar extends Component {
+import { withNavigation } from 'react-navigation';
+
+class NavBar extends Component {
   constructor(props) {
     super(props);
   }
@@ -17,9 +19,20 @@ export default class NavBar extends Component {
 
   render() {
     return(
-      <View>
-        <Button title="Navbar Charts" onPress={() => this.props.navigation.navigate('chart')}/>
+      <View style={styles.navContainer}>
+        <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
+        <Button title="Profile" onPress={() => this.props.navigation.navigate('profile')}/>
+        <Button title="Bluetooth" onPress={() => this.props.navigation.navigate('bluetooth')}/>
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  navContainer: {
+    flex: 1,
+    flexDirection: 'row'
+  }
+})
+
+export default withNavigation(NavBar);
