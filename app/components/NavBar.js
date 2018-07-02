@@ -14,7 +14,7 @@ class NavBar extends Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
+
   }
 
   render() {
