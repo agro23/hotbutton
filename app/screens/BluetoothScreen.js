@@ -7,7 +7,6 @@ import {
   Button
 } from 'react-native';
 
-import { BleManager } from 'react-native-ble-plx';
 
 export default class BluetoothScreen extends Component {
   constructor(props) {
