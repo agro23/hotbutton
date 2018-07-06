@@ -14,6 +14,7 @@ import {
   ScrollView,
   AppState,
   Dimensions,
+  FlatList
 } from 'react-native';
 
 import BleManager from 'react-native-ble-manager';
@@ -67,7 +68,6 @@ export default class BluetoothScreen extends Component {
     //         }
     //   });
     // }
-
   }
 
   handleAppStateChange(nextAppState) {
@@ -131,7 +131,7 @@ export default class BluetoothScreen extends Component {
   handleDiscoverPeripheral(peripheral){
     var peripherals = this.state.peripherals;
     if (!peripherals.has(peripheral.id)){
-      console.log('Got ble peripheral', peripheral);
+      // console.log('Got ble peripheral', peripheral);
       peripherals.set(peripheral.id, peripheral);
       this.setState({ peripherals });
     }
@@ -144,36 +144,49 @@ export default class BluetoothScreen extends Component {
       }else{
         BleManager.connect(peripheral.id).then(() => {
           let peripherals = this.state.peripherals;
-          console.log('state peripherals: ', peripherals);
           let p = peripherals.get(peripheral.id);
           if (p) {
             p.connected = true;
             peripherals.set(peripheral.id, p);
-            console.log(p);
+            console.log('connected peripheral object:', p);
             this.setState({
               peripherals,
               connected: p
             });
           }
-          console.log('Connected to ' + peripheral.id);
-
-
-          setTimeout(() => {
-
-            // Test read current RSSI value
-            BleManager.retrieveServices(peripheral.id).then((peripheralData) => {
-              console.log('Retrieved peripheral services', peripheralData);
-              BleManager.readRSSI(peripheral.id).then((rssi) => {
-                console.log('Retrieved actual RSSI value', rssi);
-              });
-            });
-          }, 900);
+          this.retrieveServicesAndCharacteristics(peripheral.id);
         }).catch((error) => {
           console.log('Connection error', error);
         });
       }
     }
   }
+
+  retrieveServicesAndCharacteristics(peripheralId) {
+    BleManager.retrieveServices(peripheralId).then((serviceData) => {
+      console.log('Retrieved peripheral services', serviceData);
+      // add that data to state
+      this.setState({
+        connectedServices: serviceData.services,
+        connectedCharacteristics: serviceData.characteristics
+      });
+      console.log('state services: ', this.state.connectedServices);
+      this.subscribeToCharacteristic(peripheralId, "180D", "2A37");
+    });
+  }
+
+  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
+    BleManager.startNotification(peripheralId, serviceId, characteristicId);
+    bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      ({ value }) => {
+        // Convert bytes array to string here
+        this.setState({subscribedCharacteristic: value});
+        console.log(`Value changed for subscribed characteristic to: ${value}`);
+      }
+    );
+  }
+
 
   render() {
     const list = Array.from(this.state.peripherals.values());
@@ -186,7 +199,12 @@ export default class BluetoothScreen extends Component {
         </TouchableHighlight>
         <Text>Connected device: {this.state.connected.name}</Text>
         <Text>ID: {this.state.connected.id}</Text>
-        <Text># of services: {this.state.connected.serviceUUIDs.length}</Text>
+        <Text>Service IDs:</Text>
+        <FlatList
+          data={this.state.connectedServices}
+          renderItem={({item}) => <Text>{item}</Text>}
+        />
+        <Text>Changing characteristic (heart rate): {this.state.subscribedCharacteristic}</Text>
         <ScrollView style={styles.scroll}>
           {(list.length == 0) &&
             <View style={{flex:1, margin: 20}}>
