@@ -46,7 +46,7 @@ export default class LoginScreen extends Component {
           value={this.state.password}
           onChangeText={(password) => this.setState({ password })}></TextInput>
         <Button title="Login" onPress={() => this.submitForm()}></Button>
-        <Button title="Need an account?" onPress={() => this.submitForm()}></Button>
+        <Button title="Need an account?" onPress={() => this.props.navigation.navigate('signup')}></Button>
         <Text>{this.state.message}</Text>
       </View>
     )
