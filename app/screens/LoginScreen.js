@@ -11,35 +11,29 @@ import * as firebase from 'firebase';
 // import { firebaseConfig } from '../../firebase-config.js';
 // const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-export default class SignupScreen extends Component {
+export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
-      confirmPassword: '',
       message: ''
     };
   }
 
   submitForm() {
-    if (this.state.password == this.state.confirmPassword) {
-      firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .catch((error) => {
         this.setState({message: error.message});
-        console.log('error creating user', error);
+        console.log('error signing in', error);
       })
-      .then(this.props.navigation.navigate('home'));
-    } else {
-      this.setState({message: "Passwords don't match"})
-    }
-
+      .then(this.props.navigation.navigate('home'))
   }
 
   render() {
     return(
       <View style={styles.container}>
-        <Text style={styles.header}>Sign Up:</Text>
+        <Text style={styles.header}>Login:</Text>
         <TextInput
           placeholder="email"
           autoCapitalize="none"
@@ -51,13 +45,8 @@ export default class SignupScreen extends Component {
           autoCapitalize="none"
           value={this.state.password}
           onChangeText={(password) => this.setState({ password })}></TextInput>
-        <TextInput
-          secureTextEntry
-          placeholder="confirm password"
-          autoCapitalize="none"
-          value={this.state.confirmPassword}
-          onChangeText={(confirmPassword) => this.setState({ confirmPassword })}></TextInput>
-        <Button title="Sign Up" onPress={() => this.submitForm()}></Button>
+        <Button title="Login" onPress={() => this.submitForm()}></Button>
+        <Button title="Need an account?" onPress={() => this.submitForm()}></Button>
         <Text>{this.state.message}</Text>
       </View>
     )
