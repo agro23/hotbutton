@@ -23,6 +23,7 @@ class NavBar extends Component {
         <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
         <Button title="Profile" onPress={() => this.props.navigation.navigate('profile')}/>
         <Button title="Bluetooth" onPress={() => this.props.navigation.navigate('bluetooth')}/>
+        <Button title="Signup" onPress={() => this.props.navigation.navigate('signup')}/>
       </View>
     )
   }
