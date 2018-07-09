@@ -21,13 +21,14 @@ export default class LoginScreen extends Component {
     };
   }
 
-  submitForm() {
-    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      .catch((error) => {
+  async submitForm() {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        this.props.navigation.navigate('home');
+    } catch (error) {
         this.setState({message: error.message});
         console.log('error signing in', error);
-      })
-      .then(this.props.navigation.navigate('home'))
+    }
   }
 
   render() {

@@ -57,7 +57,8 @@ export default class MainScreen extends Component {
         if (this.state.isNewUser) {
           <Text>{welcomeMessage}</Text>
         }
-        <NavBar/>
+        <Button title="Login" onPress={() => this.props.navigation.navigate('login')}/>
+        <Button title="Sign up" onPress={() => this.props.navigation.navigate('signup')}/>
       </View>
     )
   }
