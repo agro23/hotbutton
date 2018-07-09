@@ -41,7 +41,7 @@ const NavigationStack = createStackNavigator(
     signup: SignupScreen
   },
   {
-    initialRouteName: 'main'
+    initialRouteName: 'home'
   }
 );
 

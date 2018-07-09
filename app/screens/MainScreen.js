@@ -11,7 +11,7 @@ import {
 import * as firebase from 'firebase';
 import NavBar from '../components/NavBar';
 
-const welcomeMessage = "Welcome to the smart button app. Here you can manage your profile, register a smart button, and access data and about your usage of the button.";
+const welcomeMessage = "Welcome to the smart button app. Here you can manage your profile, register a smart button, and access data and about your usage of the button. You'll need to create an account to pair a device and save your information:";
 
 export default class MainScreen extends Component {
   constructor(props) {

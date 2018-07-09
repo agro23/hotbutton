@@ -36,11 +36,13 @@ export default class LoginScreen extends Component {
       <View style={styles.container}>
         <Text style={styles.header}>Login:</Text>
         <TextInput
+          style={styles.input}
           placeholder="email"
           autoCapitalize="none"
           value={this.state.email}
           onChangeText={(email) => this.setState({ email })}></TextInput>
         <TextInput
+          style={styles.input}
           secureTextEntry
           placeholder="password"
           autoCapitalize="none"
@@ -62,6 +64,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   header: {
-    fontSize: 30
+    fontSize: 30,
+    padding: 30
+  },
+  input: {
+    fontSize: 15,
+    padding: 10
+  },
+  button: {
+    backgroundColor: '#e8e8e8',
+    padding: 20
   }
 })
