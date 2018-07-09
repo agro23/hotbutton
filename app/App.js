@@ -19,6 +19,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import BluetoothScreen from './screens/BluetoothScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
+import MainScreen from './screens/MainScreen';
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -31,6 +32,7 @@ export default class App extends Component<Props> {
 
 const NavigationStack = createStackNavigator(
   {
+    main: MainScreen,
     home: ButtonScreen,
     chart: ChartScreen,
     profile: ProfileScreen,
@@ -39,7 +41,7 @@ const NavigationStack = createStackNavigator(
     signup: SignupScreen
   },
   {
-    initialRouteName: 'home'
+    initialRouteName: 'main'
   }
 );
 
