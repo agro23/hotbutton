@@ -3,31 +3,27 @@ import {
   StyleSheet,
   Text,
   View,
+  Button
 } from 'react-native';
+
+import * as firebase from 'firebase';
 
 export default class ProfileScreen extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      email: ''
+    };
   }
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // avail user properties:
-        // var displayName = user.displayName;
-        // var email = user.email;
-        // var emailVerified = user.emailVerified;
-        // var photoURL = user.photoURL;
-        // var isAnonymous = user.isAnonymous;
-        // var uid = user.uid;
-        // var providerData = user.providerData;
-        console.log(user);
-        // this.setState({
-        //   email: user.email,
-        // });
-      }
-    })
+  componentWillMount() {
+    let user = firebase.auth().currentUser;
+    if (user) {
+      this.setState({
+        email: user.email,
+      });
+    }
   }
 
   logout() {
@@ -40,6 +36,7 @@ export default class ProfileScreen extends Component {
     return(
       <View>
         <Text>Profile Screen</Text>
+        <Text>Currently logged is as {this.state.email}</Text>
         <Button title="Logout" onPress={() => this.logout()}/>
       </View>
     )
