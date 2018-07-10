@@ -30,10 +30,11 @@ export default class BluetoothScreen extends Component {
     super()
 
     this.state = {
-      scanning:false,
+      scanning: false,
       peripherals: new Map(),
-      connected: {},
-      appState: ''
+      connectedDevice: {},
+      appState: '',
+      isConnected: false
     }
 
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
@@ -141,6 +142,7 @@ export default class BluetoothScreen extends Component {
     if (peripheral){
       if (peripheral.connected){
         BleManager.disconnect(peripheral.id);
+        this.setState({isConnected: false});
       }else{
         BleManager.connect(peripheral.id).then(() => {
           let peripherals = this.state.peripherals;
@@ -151,7 +153,7 @@ export default class BluetoothScreen extends Component {
             console.log('connected peripheral object:', p);
             this.setState({
               peripherals,
-              connected: p
+              connectedDevice: p
             });
           }
           this.retrieveServicesAndCharacteristics(peripheral.id);
@@ -197,11 +199,11 @@ export default class BluetoothScreen extends Component {
         <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
           <Text>{this.state.scanning ? 'Scanning' : 'Scan for devices'}</Text>
         </TouchableHighlight>
-        <Text>Connected device: {this.state.connected.name}</Text>
-        <Text>ID: {this.state.connected.id}</Text>
+        <Text>Connected device: {this.state.connectedDevice.name}</Text>
+        <Text>ID: {this.state.connectedDevice.id}</Text>
         <Text>Service IDs:</Text>
         <FlatList
-          data={this.state.connectedServices}
+          data={this.state.connectedDeviceServices}
           renderItem={({item}) => <Text>{item}</Text>}
         />
         <Text>Changing characteristic (heart rate): {this.state.subscribedCharacteristic}</Text>
