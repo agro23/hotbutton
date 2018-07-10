@@ -32,8 +32,8 @@ export default class App extends Component<Props> {
 
 const NavigationStack = createStackNavigator(
   {
-    main: MainScreen,
     home: ButtonScreen,
+    main: MainScreen,
     chart: ChartScreen,
     profile: ProfileScreen,
     bluetooth: BluetoothScreen,
@@ -41,7 +41,7 @@ const NavigationStack = createStackNavigator(
     signup: SignupScreen
   },
   {
-    initialRouteName: 'main'
+    initialRouteName: 'home'
   }
 );
 
