@@ -9,8 +9,14 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  NativeModules,
+  NativeEventEmitter
 } from 'react-native';
+
+import BleManager from 'react-native-ble-manager';
+const BleManagerModule = NativeModules.BleManager;
+const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 import { createStackNavigator } from 'react-navigation';
 import ButtonScreen from './screens/ButtonScreen';
@@ -23,6 +29,52 @@ import MainScreen from './screens/MainScreen';
 
 type Props = {};
 export default class App extends Component<Props> {
+  constructor(props) {
+    super(props);
+    BleManager.start({showAlert: true});
+    this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
+    this.state = {
+      connectedDevice: {},
+      isConnected: false,
+      subscribedServiceId: '',
+      subscribedCharId: ''
+    };
+  }
+
+  componentDidMount() {
+    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+  }
+
+  handleUpdateValueForCharacteristic(data) {
+    console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+  }
+
+  setDeviceInfo(deviceObjectserviceId, charId) {
+    this.setState({
+      connectedDevice: deviceObject,
+      subscribedServiceId: serviceId,
+      subscribedCharId: charId
+    });
+    BleManager.startNotifiction(this.state.connectedDevice.id, serviceId, charId);
+  }
+
+  // setSubscriptionInfo(serviceId, charId) {
+
+    // bleManagerEmitter.addListener(
+    //   'BleManagerDidUpdateValueForCharacteristic',
+    //   ({ value }) => {
+    //     // Convert bytes array to string here
+    //     console.log('value in change listener', value);
+    //     let convertedMillis = this.convertToString(value);
+    //     this.setState({subscribedCharacteristic: convertedMillis});
+    //     console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
+    //   }
+    // );
+    //)
+  // }
+
+
+
   render() {
     return (
       <NavigationStack/>
