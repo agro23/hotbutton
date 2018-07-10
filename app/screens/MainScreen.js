@@ -11,7 +11,7 @@ import {
 import * as firebase from 'firebase';
 import NavBar from '../components/NavBar';
 
-const welcomeMessage = "Welcome to the smart button app. Here you can manage your profile, register a smart button, and access data and about your usage of the button. You'll need to create an account to pair a device and save your information:";
+const welcomeMessage = "Welcome to the smart button app. You'll need to create an account to pair a device and save your information. Then you can register a smart button, and keep track of data and about your usage of the button!";
 
 export default class MainScreen extends Component {
   constructor(props) {
@@ -55,7 +55,7 @@ export default class MainScreen extends Component {
     return (
       <View style={styles.container}>
         if (this.state.isNewUser) {
-          <Text>{welcomeMessage}</Text>
+          <Text style={styles.message}>{welcomeMessage}</Text>
         }
         <Button title="Login" onPress={() => this.props.navigation.navigate('login')}/>
         <Button title="Sign up" onPress={() => this.props.navigation.navigate('signup')}/>
@@ -70,5 +70,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10,
     alignItems: 'center'
+  },
+  message: {
+    fontSize: 18,
+    margin: 15
   }
 });

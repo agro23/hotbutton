@@ -44,7 +44,7 @@ class NavBar extends Component {
     return(
       <View style={styles.navContainer}>
         <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
-        <Button title="Bluetooth" onPress={() => this.props.navigation.navigate('bluetooth')}/>
+        <Button title="Device" onPress={() => this.props.navigation.navigate('bluetooth')}/>
         {loginOrProfile}
       </View>
     )
@@ -54,7 +54,9 @@ class NavBar extends Component {
 const styles = StyleSheet.create({
   navContainer: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 20
   }
 })
 

@@ -37,6 +37,7 @@ export default class ProfileScreen extends Component {
       <View>
         <Text>Profile Screen</Text>
         <Text>Currently logged in as {this.state.email}</Text>
+        <Text>Your paired devices:</Text>
         <Button title="Logout" onPress={() => this.logout()}/>
       </View>
     )
