@@ -33,20 +33,19 @@ class NavBar extends Component {
   }
 
   render() {
-    let login;
+    let loginOrProfile;
 
     if (!this.state.isLoggedIn) {
-      login = <Button title="Login" onPress={() => this.props.navigation.navigate('login')}/>;
+      loginOrProfile = <Button title="Login" onPress={() => this.props.navigation.navigate('login')}/>;
     } else {
-      login = null;
+      loginOrProfile = <Button title="Profile" onPress={() => this.props.navigation.navigate('profile')}/>;
     }
 
     return(
       <View style={styles.navContainer}>
         <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
-        <Button title="Profile" onPress={() => this.props.navigation.navigate('profile')}/>
         <Button title="Bluetooth" onPress={() => this.props.navigation.navigate('bluetooth')}/>
-        {login}
+        {loginOrProfile}
       </View>
     )
   }
