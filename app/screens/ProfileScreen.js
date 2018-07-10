@@ -28,7 +28,7 @@ export default class ProfileScreen extends Component {
 
   logout() {
     firebase.auth().signOut().then(() => {
-      this.props.navigation.navigate('login');
+      this.props.navigation.popToTop();
     });
   }
 
@@ -36,7 +36,7 @@ export default class ProfileScreen extends Component {
     return(
       <View>
         <Text>Profile Screen</Text>
-        <Text>Currently logged is as {this.state.email}</Text>
+        <Text>Currently logged in as {this.state.email}</Text>
         <Button title="Logout" onPress={() => this.logout()}/>
       </View>
     )
