@@ -45,7 +45,7 @@ export default class BluetoothScreen extends Component {
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
-
+    this.setDeviceInfo = this.setDeviceInfo.bind(this);
   }
 
   componentDidMount() {
@@ -163,25 +163,29 @@ export default class BluetoothScreen extends Component {
         connectedCharacteristics: serviceData.characteristics
       });
       console.log('state services: ', this.state.connectedServices);
-      // this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
-      this.props.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
+      this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
+      // this.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
     });
   }
 
-  // subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
-  //   console.log('adding subscriction to characteristic with id: ', characteristicId);
-  //   BleManager.startNotification(peripheralId, serviceId, characteristicId);
-    // bleManagerEmitter.addListener(
-    //   'BleManagerDidUpdateValueForCharacteristic',
-    //   ({ value }) => {
-    //     // Convert bytes array to string here
-    //     console.log('value in change listener', value);
-    //     let convertedMillis = this.convertToString(value);
-    //     this.setState({subscribedCharacteristic: convertedMillis});
-    //     console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
-    //   }
-    // );
-  // }
+  setDeviceInfo(connectedDevice, uartServiceId, rxCharId){
+    this.props.setDeviceInfo(connectedDevice, uartServiceId, rxCharId);
+  }
+
+  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
+    console.log('adding subscriction to characteristic with id: ', characteristicId);
+    BleManager.startNotification(peripheralId, serviceId, characteristicId);
+    bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      ({ value }) => {
+        // Convert bytes array to string here
+        console.log('value in change listener', value);
+        let convertedMillis = this.convertToString(value);
+        this.setState({subscribedCharacteristic: convertedMillis});
+        console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
+      }
+    );
+  }
 
   convertToString(numArray) {
     let string = '';
