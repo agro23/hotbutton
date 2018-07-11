@@ -49,7 +49,7 @@ export default class App extends Component<Props> {
     console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
   }
 
-  setDeviceInfo(deviceObjectserviceId, charId) {
+  setDeviceInfo(deviceObject, serviceId, charId) {
     this.setState({
       connectedDevice: deviceObject,
       subscribedServiceId: serviceId,
@@ -58,26 +58,9 @@ export default class App extends Component<Props> {
     BleManager.startNotifiction(this.state.connectedDevice.id, serviceId, charId);
   }
 
-  // setSubscriptionInfo(serviceId, charId) {
-
-    // bleManagerEmitter.addListener(
-    //   'BleManagerDidUpdateValueForCharacteristic',
-    //   ({ value }) => {
-    //     // Convert bytes array to string here
-    //     console.log('value in change listener', value);
-    //     let convertedMillis = this.convertToString(value);
-    //     this.setState({subscribedCharacteristic: convertedMillis});
-    //     console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
-    //   }
-    // );
-    //)
-  // }
-
-
-
   render() {
     return (
-      <NavigationStack/>
+      <NavigationStack screenProps={{name: "test",  setDeviceInfo: () => this.setDeviceInfo()}}/> //, setDeviceInfo = () => this.setDeviceInfo()}
     );
   }
 }

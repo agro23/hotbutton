@@ -43,10 +43,10 @@ export default class BluetoothScreen extends Component {
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
-    this.setDeviceInfo = this.setDeviceInfo.bind(this);
   }
 
   componentDidMount() {
+    console.log('test screenprops', this.props.screenProps.name);
     // BleManager.start({showAlert: true});
     AppState.addEventListener('change', this.handleAppStateChange);
     this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
@@ -109,7 +109,6 @@ export default class BluetoothScreen extends Component {
 
   startScan() {
     if (!this.state.scanning) {
-      this.setState({peripherals: new Map()});
       BleManager.scan([], 120, false).then((results) => {
         this.setState({scanning:true});
       });
@@ -143,7 +142,6 @@ export default class BluetoothScreen extends Component {
               connectedDevice: p
             });
           }
-          //this.parentCallbacks.setConnectedDevice(p); //send connected device to App.js
           this.retrieveServicesAndCharacteristics(peripheral.id);
         }).catch((error) => {
           console.log('Connection error', error);
@@ -162,12 +160,8 @@ export default class BluetoothScreen extends Component {
       });
       console.log('state services: ', this.state.connectedServices);
       this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
-      this.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
+      this.props.screenProps.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
     });
-  }
-
-  setDeviceInfo(connectedDevice, uartServiceId, rxCharId){
-    this.props.setDeviceInfo(connectedDevice, uartServiceId, rxCharId);
   }
 
   subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
@@ -193,23 +187,6 @@ export default class BluetoothScreen extends Component {
     return string;
   }
 
-  // renderServiceList() {
-  //   if (this.state.connectedDeviceServices) {
-  //     return(
-  //       <View>
-  //         <Text>Service IDs:</Text>
-  //         <FlatList
-  //           data={this.state.connectedDeviceServices}
-  //           renderItem={({item}) => <Text>{item}</Text>}
-  //         />
-  //       </View>
-  //     )
-  //   } else {
-  //     return(
-  //       null
-  //     )
-  //   }
-  // }
 
   render() {
     const list = Array.from(this.state.peripherals.values());
@@ -219,12 +196,8 @@ export default class BluetoothScreen extends Component {
         <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
           <Text>{this.state.scanning ? 'Scanning' : 'Scan for devices'}</Text>
         </TouchableHighlight>
-
         <Text>Connected device: {this.state.connectedDevice.name}</Text>
         <Text>ID: {this.state.connectedDevice.id}</Text>
-
-        {/* {this.renderServiceList()} */}
-
         <Text>Milliseconds at last press: {this.state.subscribedCharacteristic}</Text>
         <ScrollView style={styles.scroll}>
           {(list.length == 0) &&
