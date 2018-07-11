@@ -11,7 +11,6 @@ import {
   Platform,
   PermissionsAndroid,
   ScrollView,
-  AppState,
   Dimensions,
   FlatList
 } from 'react-native';
@@ -42,13 +41,13 @@ export default class BluetoothScreen extends Component {
     this.handleStopScan = this.handleStopScan.bind(this);
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
-    this.handleAppStateChange = this.handleAppStateChange.bind(this);
+
   }
 
   componentDidMount() {
-    console.log('test screenprops', this.props.screenProps.name);
+    console.log('test screenprops', this.props.screenProps);
     // BleManager.start({showAlert: true});
-    AppState.addEventListener('change', this.handleAppStateChange);
+
     this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
     this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
     this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
@@ -69,16 +68,6 @@ export default class BluetoothScreen extends Component {
     //         }
     //   });
     // }
-  }
-
-  handleAppStateChange(nextAppState) {
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!')
-      BleManager.getConnectedPeripherals([]).then((peripheralsArray) => {
-        console.log('Connected peripherals: ' + peripheralsArray.length);
-      });
-    }
-    this.setState({appState: nextAppState});
   }
 
   componentWillUnmount() {
@@ -146,19 +135,18 @@ export default class BluetoothScreen extends Component {
         }).catch((error) => {
           console.log('Connection error', error);
         });
+        BleManager.stopScan();
       }
     }
   }
 
   retrieveServicesAndCharacteristics(peripheralId) {
     BleManager.retrieveServices(peripheralId).then((serviceData) => {
-      console.log('Retrieved peripheral services', serviceData);
       // add that data to state
       this.setState({
         connectedServices: serviceData.services,
         connectedCharacteristics: serviceData.characteristics
       });
-      console.log('state services: ', this.state.connectedServices);
       this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
       this.props.screenProps.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
     });
@@ -166,7 +154,6 @@ export default class BluetoothScreen extends Component {
 
   subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
     console.log('adding subscriction to characteristic with id: ', characteristicId);
-    BleManager.startNotification(peripheralId, serviceId, characteristicId);
     bleManagerEmitter.addListener(
       'BleManagerDidUpdateValueForCharacteristic',
       ({ value }) => {

@@ -25,6 +25,9 @@ export default class ButtonScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text>Currently connected to:</Text>
+        <Text>{this.props.screenProps.connectedDevice.name}</Text>
+        <Text>Last click: {this.props.screenProps.lastClick}</Text>
         <NavBar/>
           <TouchableOpacity style={styles.circle} onPress={this.onPress}>
             <Text style={styles.alignMe}> Push </Text>
