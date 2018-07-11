@@ -74,9 +74,33 @@ export default class App extends Component<Props> {
       subscribedServiceId: serviceId,
       subscribedCharId: charId
     });
-    BleManager.retrieveServices(deviceObject.id).then({
-      BleManager.startNotifiction(deviceObject.id, serviceId, charId);
+    BleManager.retrieveServices(deviceObject.id).then(() => {
+      this.subscribeToCharacteristic(deviceObject.id, serviceId, charId)
+      // BleManager.startNotifiction(deviceObject.id, serviceId, charId)
     });
+  }
+
+  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
+    console.log('adding subscriction to characteristic with id: ', characteristicId);
+    BleManager.startNotification(peripheralId, serviceId, characteristicId);
+    bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      ({ value }) => {
+        // Convert bytes array to string here
+        console.log('value in change listener', value);
+        let convertedMillis = this.convertToString(value);
+        this.setState({subscribedCharacteristic: value});
+        console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
+      }
+    );
+  }
+
+  convertToString(numArray) {
+    let string = '';
+    for(i = 0; i < numArray.length; i++) {
+      string += String.fromCharCode(numArray[i]);
+    }
+    return string;
   }
 
   render() {

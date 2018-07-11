@@ -53,21 +53,21 @@ export default class BluetoothScreen extends Component {
     this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
     this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
 
-    // if (Platform.OS === 'android' && Platform.Version >= 23) {
-    //     PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-    //         if (result) {
-    //           console.log("Permission is OK");
-    //         } else {
-    //           PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
-    //             if (result) {
-    //               console.log("User accept");
-    //             } else {
-    //               console.log("User refuse");
-    //             }
-    //           });
-    //         }
-    //   });
-    // }
+    if (Platform.OS === 'android' && Platform.Version >= 23) {
+        PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+            if (result) {
+              console.log("Permission is OK");
+            } else {
+              PermissionsAndroid.requestPermission(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
+                if (result) {
+                  console.log("User accept");
+                } else {
+                  console.log("User refuse");
+                }
+              });
+            }
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -96,20 +96,24 @@ export default class BluetoothScreen extends Component {
     this.setState({ scanning: false });
   }
 
-  startScan() {
-    if (!this.state.scanning) {
-      BleManager.scan([], 120, false).then((results) => {
-        this.setState({scanning:true});
-      });
-    }
-  }
-
   handleDiscoverPeripheral(peripheral){
     var peripherals = this.state.peripherals;
     if (!peripherals.has(peripheral.id)){
       // console.log('Got ble peripheral', peripheral);
       peripherals.set(peripheral.id, peripheral);
       this.setState({ peripherals });
+    }
+  }
+
+  startScan() {
+    if (!this.state.scanning) {
+      try {
+        BleManager.scan([], 120, false).then((results) => {
+          this.setState({scanning:true});
+        });
+      } catch(error) {
+        console.log('error in scan', error);
+      }
     }
   }
 
@@ -147,32 +151,24 @@ export default class BluetoothScreen extends Component {
         connectedServices: serviceData.services,
         connectedCharacteristics: serviceData.characteristics
       });
-      this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
+      // this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
       this.props.screenProps.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
     });
   }
 
-  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
-    console.log('adding subscriction to characteristic with id: ', characteristicId);
-    bleManagerEmitter.addListener(
-      'BleManagerDidUpdateValueForCharacteristic',
-      ({ value }) => {
-        // Convert bytes array to string here
-        console.log('value in change listener', value);
-        let convertedMillis = this.convertToString(value);
-        this.setState({subscribedCharacteristic: convertedMillis});
-        console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
-      }
-    );
-  }
-
-  convertToString(numArray) {
-    let string = '';
-    for(i = 0; i < numArray.length; i++) {
-      string += String.fromCharCode(numArray[i]);
-    }
-    return string;
-  }
+  // subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
+  //   console.log('adding subscriction to characteristic with id: ', characteristicId);
+  //   bleManagerEmitter.addListener(
+  //     'BleManagerDidUpdateValueForCharacteristic',
+  //     ({ value }) => {
+  //       // Convert bytes array to string here
+  //       console.log('value in change listener', value);
+  //       let convertedMillis = this.convertToString(value);
+  //       this.setState({subscribedCharacteristic: convertedMillis});
+  //       console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
+  //     }
+  //   );
+  // }
 
 
   render() {

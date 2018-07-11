@@ -34,7 +34,6 @@ class NavBar extends Component {
 
   render() {
     let loginOrProfile;
-
     if (!this.state.isLoggedIn) {
       loginOrProfile = <Button title="Login" onPress={() => this.props.navigation.navigate('login')}/>;
     } else {
