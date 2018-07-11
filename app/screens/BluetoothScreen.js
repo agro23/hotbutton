@@ -10,7 +10,6 @@ import {
   NativeModules,
   Platform,
   PermissionsAndroid,
-  ListView,
   ScrollView,
   AppState,
   Dimensions,
@@ -20,7 +19,6 @@ import {
 import BleManager from 'react-native-ble-manager';
 
 const window = Dimensions.get('window');
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 const uartServiceId = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 const rxCharId = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
 const txCharId = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
@@ -164,7 +162,7 @@ export default class BluetoothScreen extends Component {
       });
       console.log('state services: ', this.state.connectedServices);
       this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
-      // this.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
+      this.setDeviceInfo(this.state.connectedDevice, uartServiceId, rxCharId);  //send subscription to App.js
     });
   }
 
@@ -215,7 +213,6 @@ export default class BluetoothScreen extends Component {
 
   render() {
     const list = Array.from(this.state.peripherals.values());
-    const dataSource = ds.cloneWithRows(list);
 
     return (
       <View style={styles.container}>
@@ -235,10 +232,9 @@ export default class BluetoothScreen extends Component {
               <Text style={{textAlign: 'center'}}>No peripherals</Text>
             </View>
           }
-          <ListView
-            enableEmptySections={true}
-            dataSource={dataSource}
-            renderRow={(item) => {
+          <FlatList
+            data={list}
+            renderItem={({item}) => {
               const color = item.connected ? 'green' : '#fff';
               return (
                 <TouchableHighlight onPress={() => this.connect(item) }>
