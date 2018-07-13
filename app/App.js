@@ -105,11 +105,13 @@ export default class App extends Component<Props> {
 
   render() {
     return (
-      <NavigationStack screenProps={{
-        lastClick: this.state.lastClick,
-        connectedDevice: this.state.connectedDevice,
-        setDeviceInfo: (deviceObject, serviceId, charId) => this.setDeviceInfo(deviceObject, serviceId, charId) //callback to be used for global pairing
-      }}/>
+      <View style={styles.container}>
+        <NavigationStack screenProps={{
+          lastClick: this.state.lastClick,
+          connectedDevice: this.state.connectedDevice,
+          setDeviceInfo: (deviceObject, serviceId, charId) => this.setDeviceInfo(deviceObject, serviceId, charId) //callback to be used for global pairing
+        }}/>
+      </View>
     );
   }
 }
@@ -128,3 +130,10 @@ const NavigationStack = createStackNavigator(
     initialRouteName: 'home'
   }
 );
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+  }
+});

@@ -52,11 +52,10 @@ class NavBar extends Component {
 
 const styles = StyleSheet.create({
   navContainer: {
-    // flex: 1,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    alignSelf: 'stretch',
     height: 80,
     backgroundColor: '#9f939b'
   }

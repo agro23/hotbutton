@@ -22,8 +22,8 @@ export default class DeviceCard extends Component {
 
     return(
       <View style={styles.card}>
-        <Text>Currently connected to:</Text>
-        <Text>{this.props.connectedDevice.name}</Text>
+        <Text fontSize='20'>Currently connected to:</Text>
+        <Text fontSize='20'>{this.props.connectedDevice.name}</Text>
       </View>
     )
   }
@@ -35,5 +35,7 @@ const styles = StyleSheet.create({
     padding: 15,
     // backgroundColor: '#414141',
     height: 40,
+    // fontSize: 20,
+    // color: '#414141'
   }
 })
