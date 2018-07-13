@@ -73,6 +73,7 @@ export default class ChartScreen extends Component {
         <Text>Chart Screen</Text>
         <FlatList
           data={this.state.clicks}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => <Text>{item.seconds}</Text>}
           >
         </FlatList>
