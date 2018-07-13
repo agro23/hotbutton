@@ -18,6 +18,10 @@ const settings = {
 firestore.settings(settings);
 
 export default class ChartScreen extends Component {
+  static navigationOptions = {
+    title: 'Click History',
+  }
+
   constructor(props) {
     super(props);
     this.db = firebaseApp.firestore().collection('clicks');

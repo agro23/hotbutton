@@ -11,13 +11,11 @@ import {
   Platform,
   PermissionsAndroid,
   ScrollView,
-  Dimensions,
   FlatList
 } from 'react-native';
 
 import BleManager from 'react-native-ble-manager';
 
-const window = Dimensions.get('window');
 const uartServiceId = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 const rxCharId = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
 const txCharId = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
@@ -26,6 +24,10 @@ const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 export default class BluetoothScreen extends Component {
+  static navigationOptions = {
+    title: 'Device Manager',
+  }
+
   constructor(){
     super()
 
@@ -212,8 +214,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF'
-    // width: window.width,
-    // height: window.height
   },
   scroll: {
     flex: 1,
