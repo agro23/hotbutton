@@ -43,7 +43,8 @@ export default class App extends Component<Props> {
       isConnected: false,
       subscribedServiceId: '',
       subscribedCharId: '',
-      lastClick: 'no click recorded'
+      lastClick: 'no click recorded',
+      appState: '',
     };
 
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);

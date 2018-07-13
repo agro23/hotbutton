@@ -35,8 +35,8 @@ export default class BluetoothScreen extends Component {
       scanning: false,
       peripherals: new Map(),
       connectedDevice: {},
-      appState: '',
-      isConnected: false
+      isConnected: false,
+      subscribedCharacteristic: 'no clicks yet'
     }
 
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
@@ -48,7 +48,7 @@ export default class BluetoothScreen extends Component {
 
   componentDidMount() {
     console.log('test screenprops', this.props.screenProps);
-    // BleManager.start({showAlert: true});
+    BleManager.start({showAlert: true});
 
     this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
     this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
@@ -92,6 +92,7 @@ export default class BluetoothScreen extends Component {
 
   handleUpdateValueForCharacteristic(data) {
     console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+    this.setState({subscribedCharacteristic: data.value});
   }
 
   handleStopScan() {
@@ -99,15 +100,17 @@ export default class BluetoothScreen extends Component {
   }
 
   handleDiscoverPeripheral(peripheral){
+    console.log('peripheral handler fired');
     var peripherals = this.state.peripherals;
     if (!peripherals.has(peripheral.id)){
-      // console.log('Got ble peripheral', peripheral);
+      console.log('Got ble peripheral', peripheral);
       peripherals.set(peripheral.id, peripheral);
       this.setState({ peripherals });
     }
   }
 
   startScan() {
+    console.log('starting scan');
     if (!this.state.scanning) {
       try {
         BleManager.scan([], 120, false).then((results) => {
@@ -178,7 +181,9 @@ export default class BluetoothScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <TouchableHighlight style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}} onPress={() => this.startScan() }>
+        <TouchableHighlight
+          style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}}
+          onPress={() => this.startScan() }>
           <Text>{this.state.scanning ? 'Scanning' : 'Scan for devices'}</Text>
         </TouchableHighlight>
         <Text>Connected device: {this.state.connectedDevice.name}</Text>
