@@ -27,9 +27,7 @@ export default class ButtonScreen extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-
-            {//this will use conditional rendering to show device info when device is connected
-              /* <View style={styles.deviceCardContainer}>
+            {/* <View style={styles.deviceCardContainer}>
               <DeviceCard connectedDevice={this.props.screenProps.connectedDevice}/>
             </View>
             <View style={styles.clickInfoContainer}>
