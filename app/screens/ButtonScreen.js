@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 
 import NavBar from '../components/NavBar';
+import DeviceCard from '../components/DeviceCard';
 
 export default class ButtonScreen extends Component {
   constructor(props) {
@@ -25,6 +26,7 @@ export default class ButtonScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <DeviceCard/>
         <Text>Currently connected to:</Text>
         <Text>{this.props.screenProps.connectedDevice.name}</Text>
         <Text>Last click: {this.props.screenProps.lastClick}</Text>
@@ -42,7 +44,7 @@ export default class ButtonScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     // paddingHorizontal: 10,
     alignItems: 'center'
   },

@@ -6,7 +6,7 @@ import {
   Button
 } from 'react-native';
 
-class DeviceCard extends Component {
+export default class DeviceCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,7 +21,7 @@ class DeviceCard extends Component {
   render() {
 
     return(
-      <View style={styles.navContainer}>
+      <View style={styles.cardContainer}>
 
       </View>
     )
@@ -30,6 +30,9 @@ class DeviceCard extends Component {
 
 const styles = StyleSheet.create({
   cardContainer: {
-
+    margin: 20,
+    backgroundColor: '#414141',
+    width: 200,
+    height: 150
   }
 })
