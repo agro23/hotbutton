@@ -28,16 +28,12 @@ export default class ButtonScreen extends Component {
         <Text>Currently connected to:</Text>
         <Text>{this.props.screenProps.connectedDevice.name}</Text>
         <Text>Last click: {this.props.screenProps.lastClick}</Text>
+        <TouchableOpacity style={styles.button} onPress={this.onPress}>
+          <Text style={[styles.countText]}>
+            { this.state.count !== 0 ? this.state.count : 'Push'}
+          </Text>
+        </TouchableOpacity>
         <NavBar/>
-          <TouchableOpacity style={styles.button} onPress={this.onPress}>
-            {/* <Text style={styles.buttonText}> Push </Text> */}
-            <Text style={[styles.countText]}>
-              { this.state.count !== 0 ? this.state.count : 'Push'}
-            </Text>
-          </TouchableOpacity>
-          <View style={[styles.countContainer]}>
-
-          </View>
       </View>
     )
   }
@@ -46,8 +42,8 @@ export default class ButtonScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    // paddingHorizontal: 10,
     alignItems: 'center'
   },
   countContainer: {
@@ -59,7 +55,7 @@ const styles = StyleSheet.create({
     fontSize: 33,
     color: '#414141'
   },
-  button: { // replaced button with this style
+  button: {
     justifyContent: 'center',
     alignItems: 'center',
     width: 150,
@@ -69,8 +65,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     margin: 120,
-    // borderWidth:5,
-    // borderColor: 'darkblue',
     alignItems: 'center'
   }
 });

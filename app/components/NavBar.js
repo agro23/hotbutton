@@ -35,15 +35,15 @@ class NavBar extends Component {
   render() {
     let loginOrProfile;
     if (!this.state.isLoggedIn) {
-      loginOrProfile = <Button title="Login" onPress={() => this.props.navigation.navigate('login')}/>;
+      loginOrProfile = <Button color="#edece4" title="Login" onPress={() => this.props.navigation.navigate('login')}/>;
     } else {
-      loginOrProfile = <Button title="Profile" onPress={() => this.props.navigation.navigate('profile')}/>;
+      loginOrProfile = <Button color="#edece4" title="Profile" onPress={() => this.props.navigation.navigate('profile')}/>;
     }
 
     return(
       <View style={styles.navContainer}>
-        <Button title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
-        <Button title="Device" onPress={() => this.props.navigation.navigate('bluetooth')}/>
+        <Button color="#edece4" title="Charts" onPress={() => this.props.navigation.navigate('chart')}/>
+        <Button color="#edece4" title="Device" onPress={() => this.props.navigation.navigate('bluetooth')}/>
         {loginOrProfile}
       </View>
     )
@@ -52,10 +52,13 @@ class NavBar extends Component {
 
 const styles = StyleSheet.create({
   navContainer: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
-    position: 'absolute',
-    bottom: 20
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    height: 80,
+    backgroundColor: '#9f939b'
   }
 })
 
