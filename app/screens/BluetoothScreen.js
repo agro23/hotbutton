@@ -211,9 +211,9 @@ export default class BluetoothScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
-    width: window.width,
-    height: window.height
+    backgroundColor: '#FFF'
+    // width: window.width,
+    // height: window.height
   },
   scroll: {
     flex: 1,

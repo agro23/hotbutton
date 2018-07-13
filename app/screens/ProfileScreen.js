@@ -9,6 +9,10 @@ import {
 import * as firebase from 'firebase';
 
 export default class ProfileScreen extends Component {
+  static navigationOptions = {
+    title: 'Profile',
+  }
+
   constructor(props) {
     super(props);
 

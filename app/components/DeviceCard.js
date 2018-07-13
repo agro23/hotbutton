@@ -21,18 +21,19 @@ export default class DeviceCard extends Component {
   render() {
 
     return(
-      <View style={styles.cardContainer}>
-
+      <View style={styles.card}>
+        <Text>Currently connected to:</Text>
+        <Text>{this.props.connectedDevice.name}</Text>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  cardContainer: {
-    margin: 20,
-    backgroundColor: '#414141',
-    width: 200,
-    height: 150
+  card: {
+    flex: 1,
+    padding: 15,
+    // backgroundColor: '#414141',
+    height: 40,
   }
 })

@@ -26,10 +26,12 @@ export default class ButtonScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <DeviceCard/>
-        <Text>Currently connected to:</Text>
-        <Text>{this.props.screenProps.connectedDevice.name}</Text>
-        <Text>Last click: {this.props.screenProps.lastClick}</Text>
+        <View style={styles.deviceCardContainer}>
+          <DeviceCard connectedDevice={this.props.screenProps.connectedDevice}/>
+        </View>
+        <View style={styles.clickInfoContainer}>
+          <Text style={{flex: 1}} >Last click: {this.props.screenProps.lastClick}</Text>
+        </View>
         <TouchableOpacity style={styles.button} onPress={this.onPress}>
           <Text style={[styles.countText]}>
             { this.state.count !== 0 ? this.state.count : 'Push'}
@@ -44,13 +46,24 @@ export default class ButtonScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
     // paddingHorizontal: 10,
     alignItems: 'center'
   },
+  deviceCardContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    margin: 30
+  },
+  clickInfoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    margin: 30
+  },
   countContainer: {
     alignItems: 'center',
-    padding: 3
+    // padding: 3
   },
   countText: {
     color: 'black',
@@ -60,13 +73,11 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 150,
-    height: 150,
     borderRadius: 150/2,
     backgroundColor: '#b8d6ce',
-    alignItems: 'center',
-    padding: 10,
-    margin: 120,
-    alignItems: 'center'
+    width: 150,
+    height: 150,
+    // padding: 10,
+    // margin: 120,
   }
 });
