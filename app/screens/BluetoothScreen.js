@@ -16,9 +16,9 @@ import {
 
 import BleManager from 'react-native-ble-manager';
 
-// const uartServiceId = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
-// const rxCharId = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
-// const txCharId = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
+const uartServiceId = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+const rxCharId = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
+const txCharId = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
 
 const customServiceId = "9e5c00cc-7541-4205-8df1-74f41e2fb968";
 const clickCharId = "0001";
@@ -159,24 +159,23 @@ export default class BluetoothScreen extends Component {
         connectedServices: serviceData.services,
         connectedCharacteristics: serviceData.characteristics
       });
-      // this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
+      this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
       this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
-    });
+    }).catch((error) => console.log('Error retrieving peripheral services: ', error));
   }
 
-  // subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
-  //   console.log('adding subscriction to characteristic with id: ', characteristicId);
-  //   bleManagerEmitter.addListener(
-  //     'BleManagerDidUpdateValueForCharacteristic',
-  //     ({ value }) => {
-  //       // Convert bytes array to string here
-  //       console.log('value in change listener', value);
-  //       let convertedMillis = this.convertToString(value);
-  //       this.setState({subscribedCharacteristic: convertedMillis});
-  //       console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
-  //     }
-  //   );
-  // }
+  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
+    console.log('adding subscriction to characteristic with id: ', characteristicId);
+    BleManager.startNotification(peripheralId, serviceId, characteristicId);
+    bleManagerEmitter.addListener(
+      'BleManagerDidUpdateValueForCharacteristic',
+      ({ value }) => {
+        // Convert bytes array to string here
+        console.log('value in change listener', value);
+        this.setState({subscribedCharacteristic: value});
+      }
+    );
+  }
 
 
   render() {

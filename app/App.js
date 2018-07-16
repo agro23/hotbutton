@@ -80,8 +80,7 @@ export default class App extends Component<Props> {
       subscribedCharId: charId
     });
     BleManager.retrieveServices(deviceObject.id).then(() => {
-      this.subscribeToCharacteristic(deviceObject.id, serviceId, charId)
-      // BleManager.startNotifiction(deviceObject.id, serviceId, charId)
+      this.subscribeToCharacteristic(deviceObject.id, serviceId, charId);
     });
   }
 
