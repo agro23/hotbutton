@@ -177,6 +177,11 @@ export default class BluetoothScreen extends Component {
     );
   }
 
+  disconnectAll() {
+    let connected = this.state.connectedDevice;
+
+  }
+
 
   render() {
     const list = Array.from(this.state.peripherals.values());
@@ -188,6 +193,13 @@ export default class BluetoothScreen extends Component {
           onPress={() => this.startScan() }>
           <Text>{this.state.scanning ? 'Scanning' : 'Scan for devices'}</Text>
         </TouchableHighlight>
+
+        <TouchableHighlight
+          style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}}
+          onPress={() => BleManager.disconnect(this.state.connectedDevice.id) }>
+          <Text>Disconnect</Text>
+        </TouchableHighlight>
+
         <Text>Connected device: {this.state.connectedDevice.name}</Text>
         <Text>ID: {this.state.connectedDevice.id}</Text>
         <Text>Milliseconds at last press: {this.state.subscribedCharacteristic}</Text>
@@ -199,6 +211,7 @@ export default class BluetoothScreen extends Component {
           }
           <FlatList
             data={list}
+            keyExtractor={(item, index) => index.toString()}
             renderItem={({item}) => {
               const color = item.connected ? 'green' : '#fff';
               return (
