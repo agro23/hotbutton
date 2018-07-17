@@ -264,15 +264,16 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     backgroundColor: '#f0f0f0',
-    margin: 10,
+    margin: 15,
   },
   row: {
     margin: 10
   },
   scanButton: {
-    marginTop: 40,
-    margin: 20,
-    padding:20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    margin: 15,
     backgroundColor:'#b8d6ce'
   }
 });
