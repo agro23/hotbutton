@@ -10,6 +10,7 @@ import {
 
 import NavBar from '../components/NavBar';
 import DeviceCard from '../components/DeviceCard';
+import * as firebase from 'firebase';
 
 export default class ButtonScreen extends Component {
   constructor(props) {
@@ -18,9 +19,25 @@ export default class ButtonScreen extends Component {
   }
 
   onPress = () => {
+    //count locally
     this.setState({
       count: this.state.count+1
     });
+    //count in db if a user is logged in
+    let user = this.props.screenProps.currentUser
+    if (user != null) {
+      let clickTime = Date.now()
+      this.logClickToUser(user.uid, clickTime);
+    }
+  }
+
+  logClickToUser(userId, clickTime) {
+    let duration = 10
+    console.log(userId);
+    firebase.firestore().collection('clicks').doc(userId.toString())
+      .set({ [clickTime] : duration }, { merge: true })
+      .then(console.log('click data added to firestore'))
+      .catch((error) => console.log('error writing data: ', error));
   }
 
   render() {

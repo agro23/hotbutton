@@ -24,7 +24,7 @@ export default class ChartScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.db = firebaseApp.firestore().collection('clicks');
+    this.userClicksDoc = firebaseApp.firestore().collection('clicks').doc(this.props.screenProps.currentUser.uid);
     this.state = {
 
     };
@@ -36,7 +36,7 @@ export default class ChartScreen extends Component {
 
   getInitialData() {
     var initialClicks = [];
-    this.db.get().then((snapshot) => {
+    this.userClicksDoc.get().then((snapshot) => {
       snapshot.forEach((doc) => {
         console.log(doc.data());
         clicksObject = doc.data();
@@ -54,10 +54,10 @@ export default class ChartScreen extends Component {
     console.log(this.state.clicks);
   }
 
-  listenForData(db) {
+  listenForData(userClicksDoc) {
     // var clicks = [];
 
-    // db.on('value', (snap) => {
+    // userClicksDoc.on('value', (snap) => {
     //   snap.forEach((child) => {
     //     clicks.push({
     //       timestamp: child.timestamp,

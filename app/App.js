@@ -15,6 +15,7 @@ import {
   AppState
 } from 'react-native';
 
+import * as firebase from 'firebase';
 import BleManager from 'react-native-ble-manager';
 const BleManagerModule = NativeModules.BleManager;
 const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
@@ -57,7 +58,7 @@ export default class App extends Component<Props> {
     this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
 
     //get current user with observer on Auth
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ currentUser: user });
       } else {
@@ -123,7 +124,8 @@ export default class App extends Component<Props> {
         <NavigationStack screenProps={{
           lastClick: this.state.lastClick,
           connectedDevice: this.state.connectedDevice,
-          setDeviceInfo: (deviceObject, serviceId, charId) => this.setDeviceInfo(deviceObject, serviceId, charId) //callback to be used for global pairing
+          setDeviceInfo: (deviceObject, serviceId, charId) => this.setDeviceInfo(deviceObject, serviceId, charId), //callback to be used for global pairing
+          currentUser: this.state.currentUser
         }}/>
       </View>
     );
