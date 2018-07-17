@@ -39,12 +39,13 @@ export default class App extends Component<Props> {
     BleManager.start({showAlert: true});
 
     this.state = {
+      appState: '',
       connectedDevice: {},
       isConnected: false,
       subscribedServiceId: '',
       subscribedCharId: '',
       lastClick: 'no click recorded',
-      appState: '',
+      currentUser: {}
     };
 
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
@@ -54,6 +55,15 @@ export default class App extends Component<Props> {
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
     this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+
+    //get current user with observer on Auth
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        this.setState({ currentUser: user });
+      } else {
+        this.setState({ currentUser: {} });
+      }
+    });
   }
 
   handleUpdateValueForCharacteristic(data) {
