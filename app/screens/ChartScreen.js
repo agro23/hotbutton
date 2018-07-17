@@ -27,6 +27,7 @@ export default class ChartScreen extends Component {
     this.fbClickCollection = firebaseApp.firestore().collection('clicks');
     this.state = {
       isLoggedIn: false,
+      clicks: [0]
     };
   }
 
@@ -41,7 +42,7 @@ export default class ChartScreen extends Component {
     var initialClicks = [];
     console.log('userid: ', userId);
     this.fbClickCollection.doc(userId.toString()).get().then((doc) => {
-      initialClicks = Object.keys(doc.data());
+      initialClicks = Object.keys(doc.data()).map((item) => parseInt(item) );
       this.setState({ clicks: initialClicks });
     }).catch((error) => {
       console.log('error getting initial data');
@@ -68,15 +69,15 @@ export default class ChartScreen extends Component {
 
   render() {
     const chartFill = 'rgb(134, 65, 244)';
-    const data = [ 10, 5, 25, 15, 20 ];
-
+    // let data = [ 10, 5, 25, 15, 20 ];
+    let data = this.state.clicks;
+    console.log('state clicks', this.state.clicks);
     return(
       <View>
         <Text>Chart Screen</Text>
         <BarChart
-                    style={{ flex: 1, marginLeft: 8 }}
+                    style={{ flex: 1, margin: 15 }}
                     data={data}
-                    horizontal={true}
                     svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
                     contentInset={{ top: 10, bottom: 10 }}
                     spacing={0.2}

@@ -51,24 +51,20 @@ export default class App extends Component<Props> {
 
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this.handleAppStateChange);
-    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
-
     //get current user with observer on Auth
-    this.getCurrentUser();
-  }
-
-  getCurrentUser() {
     firebase.auth().onAuthStateChanged((user) => {
+      console.log('current user in app', user);
       if (user) {
         this.setState({ currentUser: user });
       } else {
         this.setState({ currentUser: {} });
       }
     });
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
+    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
   }
 
   handleUpdateValueForCharacteristic(data) {
