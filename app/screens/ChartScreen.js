@@ -24,40 +24,35 @@ export default class ChartScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.userClicksDoc = firebaseApp.firestore().collection('clicks').doc(this.props.screenProps.currentUser.uid);
+    this.fbClickCollection = firebaseApp.firestore().collection('clicks');
     this.state = {
-
+      isLoggedIn: false,
     };
   }
 
   componentDidMount() {
-    this.getInitialData();
+    if (this.props.screenProps.currentUser != null) {
+      this.setState({ isLoggedIn: true })
+      this.getInitialData(this.props.screenProps.currentUser.uid);
+    }
   }
 
-  getInitialData() {
+  getInitialData(userId) {
     var initialClicks = [];
-    this.userClicksDoc.get().then((snapshot) => {
-      snapshot.forEach((doc) => {
-        console.log(doc.data());
-        clicksObject = doc.data();
-        for( key in clicksObject ) {
-          initialClicks.push(clicksObject[key].timestamp);
-        }
-        this.setState({ clicks: initialClicks });
-      })
+    console.log('userid: ', userId);
+    this.fbClickCollection.doc(userId.toString()).get().then((doc) => {
+      initialClicks = Object.keys(doc.data());
+      this.setState({ clicks: initialClicks });
     }).catch((error) => {
       console.log('error getting initial data');
       throw error;
     });
-
-    console.log(initialClicks);
-    console.log(this.state.clicks);
   }
 
-  listenForData(userClicksDoc) {
+  listenForData(fbClickCollection) {
     // var clicks = [];
 
-    // userClicksDoc.on('value', (snap) => {
+    // fbClickCollection.on('value', (snap) => {
     //   snap.forEach((child) => {
     //     clicks.push({
     //       timestamp: child.timestamp,
@@ -78,7 +73,7 @@ export default class ChartScreen extends Component {
         <FlatList
           data={this.state.clicks}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <Text>{item.seconds}</Text>}
+          renderItem={({item}) => <Text>{item}</Text>}
           >
         </FlatList>
       </View>

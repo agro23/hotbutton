@@ -58,6 +58,10 @@ export default class App extends Component<Props> {
     this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
 
     //get current user with observer on Auth
+    this.getCurrentUser();
+  }
+
+  getCurrentUser() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.setState({ currentUser: user });
