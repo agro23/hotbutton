@@ -14,6 +14,7 @@ import {
   FlatList
 } from 'react-native';
 
+import DeviceCard from '../components/DeviceCard';
 import BleManager from 'react-native-ble-manager';
 
 const uartServiceId = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
@@ -39,7 +40,9 @@ export default class BluetoothScreen extends Component {
       peripherals: new Map(),
       connectedDevice: {},
       isConnected: false,
-      subscribedCharacteristic: 'no clicks yet'
+      subscribedCharacteristic: 'no clicks yet',
+      connectedServices: [],
+      connectedCharacteristics: []
     }
 
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
@@ -177,9 +180,20 @@ export default class BluetoothScreen extends Component {
     );
   }
 
-  disconnectAll() {
-    let connected = this.state.connectedDevice;
-
+  disconnectDevice() {
+    if(this.state.connectedDevice.id) {
+      BleManager.disconnect(this.state.connectedDevice.id).then(() => {
+        this.setState({
+          connectedDevice: {},
+          isConnected: false,
+          subscribedCharacteristic: '',
+          connectedServices: [],
+          connectedCharacteristics: []
+        })
+      }).catch((error) => {
+        console.log('Error disconnecting: ', error);
+      });
+    }
   }
 
 
@@ -188,6 +202,7 @@ export default class BluetoothScreen extends Component {
 
     return (
       <View style={styles.container}>
+        <DeviceCard connectedDevice={this.state.connectedDevice}/>
         <TouchableHighlight
           style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}}
           onPress={() => this.startScan() }>
@@ -196,12 +211,12 @@ export default class BluetoothScreen extends Component {
 
         <TouchableHighlight
           style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}}
-          onPress={() => BleManager.disconnect(this.state.connectedDevice.id) }>
+          onPress={() => this.disconnectDevice() }>
           <Text>Disconnect</Text>
         </TouchableHighlight>
 
-        <Text>Connected device: {this.state.connectedDevice.name}</Text>
-        <Text>ID: {this.state.connectedDevice.id}</Text>
+        {/* <Text>Connected device: {this.state.connectedDevice.name}</Text>
+        <Text>ID: {this.state.connectedDevice.id}</Text> */}
         <Text>Milliseconds at last press: {this.state.subscribedCharacteristic}</Text>
         <ScrollView style={styles.scroll}>
           {(list.length == 0) &&

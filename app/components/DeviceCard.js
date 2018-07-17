@@ -9,8 +9,16 @@ import {
 export default class DeviceCard extends Component {
   constructor(props) {
     super(props);
-    this.state = {
 
+    let connectionStatus;
+    if (props.connectedDevice.connected) {
+      connectionStatus = true;
+    } else {
+      connectionStatus = false;
+    }
+
+    this.state = {
+      isConnected: connectionStatus
     }
   }
 
@@ -19,13 +27,21 @@ export default class DeviceCard extends Component {
   }
 
   render() {
+    if (this.state.isConnected) {
+      return(
+        <View style={styles.card}>
+          <Text fontSize='20'>Currently connected to:</Text>
+          <Text fontSize='20'>{this.props.connectedDevice.name}</Text>
+        </View>
+      )
+    } else {
+      return(
+        <View style={styles.card}>
+          <Text fontSize='20'>No device connected.</Text>
+        </View>
+      )
+    }
 
-    return(
-      <View style={styles.card}>
-        <Text fontSize='20'>Currently connected to:</Text>
-        <Text fontSize='20'>{this.props.connectedDevice.name}</Text>
-      </View>
-    )
   }
 }
 
