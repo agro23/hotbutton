@@ -200,24 +200,35 @@ export default class BluetoothScreen extends Component {
   render() {
     const list = Array.from(this.state.peripherals.values());
 
-    return (
-      <View style={styles.container}>
-        <DeviceCard connectedDevice={this.state.connectedDevice}/>
-        <TouchableHighlight
-          style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}}
-          onPress={() => this.startScan() }>
-          <Text>{this.state.scanning ? 'Scanning' : 'Scan for devices'}</Text>
-        </TouchableHighlight>
-
+    let disconnectButton;
+    if (this.state.isConnected) {
+      disconnectButton =
         <TouchableHighlight
           style={{marginTop: 40,margin: 20, padding:20, backgroundColor:'#ccc'}}
           onPress={() => this.disconnectDevice() }>
           <Text>Disconnect</Text>
+        </TouchableHighlight>;
+    } else {
+      disconnectButton = null;
+    }
+
+    return (
+      <View style={styles.container}>
+        <DeviceCard
+          connectedDevice={this.state.connectedDevice}
+          lastClick={this.state.subscribedCharacteristic}
+        />
+        <TouchableHighlight
+          style={styles.scanButton}
+          onPress={() => this.startScan() }>
+          <Text>{this.state.scanning ? 'Scanning' : 'Scan for devices'}</Text>
         </TouchableHighlight>
+
+        {disconnectButton}
 
         {/* <Text>Connected device: {this.state.connectedDevice.name}</Text>
         <Text>ID: {this.state.connectedDevice.id}</Text> */}
-        <Text>Milliseconds at last press: {this.state.subscribedCharacteristic}</Text>
+        {/* <Text>Milliseconds at last press: {this.state.subscribedCharacteristic}</Text> */}
         <ScrollView style={styles.scroll}>
           {(list.length == 0) &&
             <View style={{flex:1, margin: 20}}>
@@ -258,4 +269,10 @@ const styles = StyleSheet.create({
   row: {
     margin: 10
   },
+  scanButton: {
+    marginTop: 40,
+    margin: 20,
+    padding:20,
+    backgroundColor:'#b8d6ce'
+  }
 });

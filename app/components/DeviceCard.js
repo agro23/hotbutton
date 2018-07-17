@@ -37,7 +37,8 @@ export default class DeviceCard extends Component {
     } else {
       return(
         <View style={styles.card}>
-          <Text fontSize='20'>No device connected.</Text>
+          <Text>No device connected.</Text>
+          <Text>Last click: {this.props.lastClick}</Text>
         </View>
       )
     }
@@ -47,10 +48,11 @@ export default class DeviceCard extends Component {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
+    // flex: 1,
     padding: 15,
-    // backgroundColor: '#414141',
-    height: 40,
+    margin: 15,
+    backgroundColor: '#f7f7f7',
+    // height: 40,
     // fontSize: 20,
     // color: '#414141'
   }
