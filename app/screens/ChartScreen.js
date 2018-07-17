@@ -5,7 +5,7 @@ import {
   View,
   FlatList
 } from 'react-native';
-
+import { BarChart, Grid } from 'react-native-svg-charts';
 import * as firebase from 'firebase';
 require("firebase/firestore");
 
@@ -67,9 +67,30 @@ export default class ChartScreen extends Component {
   }
 
   render() {
+    const chartFill = 'rgb(134, 65, 244)';
+    const data = [ 10, 5, 25, 15, 20 ];
+
     return(
       <View>
         <Text>Chart Screen</Text>
+        <BarChart
+                    style={{ flex: 1, marginLeft: 8 }}
+                    data={data}
+                    horizontal={true}
+                    svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
+                    contentInset={{ top: 10, bottom: 10 }}
+                    spacing={0.2}
+                    gridMin={0}
+        >
+          <Grid direction={Grid.Direction.VERTICAL}/>
+        </BarChart>
+        {/* <BarChart
+          data={data}
+          svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
+
+          >
+          <Grid direction={Grid.Direction.HORIZONTAL}/>
+        </BarChart> */}
         <FlatList
           data={this.state.clicks}
           keyExtractor={(item, index) => index.toString()}
