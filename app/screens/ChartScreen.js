@@ -76,7 +76,7 @@ export default class ChartScreen extends Component {
     return(
       <View>
         <Text>Chart Screen</Text>
-
+        <DayChart clicks={data}/>
         {/* <BarChart
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}

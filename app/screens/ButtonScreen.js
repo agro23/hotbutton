@@ -33,10 +33,8 @@ export default class ButtonScreen extends Component {
 
   logClickToUser(userId, clickTime) {
     let duration = 10
-    console.log(userId);
     firebase.firestore().collection('clicks').doc(userId.toString())
       .set({ [clickTime] : duration }, { merge: true })
-      .then(console.log('click data added to firestore'))
       .catch((error) => console.log('error writing data: ', error));
   }
 

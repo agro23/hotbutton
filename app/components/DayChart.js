@@ -16,8 +16,10 @@ export default class DayChart extends Component {
   }
 
   render() {
+    const data = this.props.clicks;
 
     return(
+
       <View style={styles.card}>
         <Text>Day chart:</Text>
         <BarChart
@@ -39,4 +41,4 @@ export default class DayChart extends Component {
 
 const styles = StyleSheet.create({
 
-})
+});
