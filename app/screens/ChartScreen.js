@@ -32,7 +32,8 @@ export default class ChartScreen extends Component {
     this.state = {
       isLoggedIn: false,
       clicks: [0],
-      loading: true
+      loading: true,
+      dayData: new Map() //day will be default, i.e. data auto processes here
     };
   }
 
@@ -45,17 +46,43 @@ export default class ChartScreen extends Component {
 
   getInitialData(userId) {
     var initialClicks = [];
-    console.log('userid: ', userId);
     this.fbClickCollection.doc(userId.toString()).get().then((doc) => {
       initialClicks = Object.keys(doc.data()).map((item) => parseInt(item) );
       this.setState({
         clicks: initialClicks,
         loading: false
       });
+      console.log('all clicks from fb: ', initialClicks);
+      this.processDayChartData(initialClicks);
     }).catch((error) => {
-      console.log('error getting initial data');
+      console.log('error getting initial data', error);
       throw error;
     });
+  }
+
+  processDayChartData(clickArray) {
+    //filter clicks to include only past 24 hours
+    let filteredClicks = [];
+    let dayEnd = Date.now();
+    let dayStart = Date.now() - (8.64*10e7);
+    clickArray.forEach((click) => {
+      if (click < dayEnd && click > dayStart) {
+        filteredClicks.push(click);
+      }
+    })
+    console.log('filtered clicks: ', filteredClicks);
+
+    // map clicks to 24 hours
+    let hourMap = new Map();
+    filteredClicks.forEach((click) => {
+      let asDate = new Date(click);
+      let hourIndex = asDate.getHours();
+      let alreadyMapped = hourMap.get(hourIndex) || [];
+      alreadyMapped.push(click);
+      hourMap.set(hourIndex, alreadyMapped);
+    });
+    console.log('hour map: ', hourMap);
+    this.setState(dayData: hourMap);
   }
 
 
@@ -69,23 +96,7 @@ export default class ChartScreen extends Component {
         <Text>Chart Screen</Text>
         <LoadModal loading={this.state.loading}/>
         <DayChart clicks={this.state.clicks}/>
-        {/* <BarChart
-          style={{ flex: 1, margin: 15 }}
-          data={data}
-          svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
-          contentInset={{ top: 10, bottom: 10 }}
-          spacing={0.2}
-          gridMin={0}
-          >
-          <Grid direction={Grid.Direction.VERTICAL}/>
-        </BarChart> */}
-        {/* <BarChart
-          data={data}
-          svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
 
-          >
-          <Grid direction={Grid.Direction.HORIZONTAL}/>
-        </BarChart> */}
         <FlatList
           data={this.state.clicks}
           keyExtractor={(item, index) => index.toString()}
