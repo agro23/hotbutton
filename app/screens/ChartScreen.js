@@ -85,7 +85,7 @@ export default class ChartScreen extends Component {
         <Text>Chart Screen</Text>
         <LoadModal loading={this.state.loading}/>
         <DayChart clicks={this.state.clicks}/>
-        <BarChart
+        {/* <BarChart
           style={{ flex: 1, margin: 15 }}
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
@@ -94,7 +94,7 @@ export default class ChartScreen extends Component {
           gridMin={0}
           >
           <Grid direction={Grid.Direction.VERTICAL}/>
-        </BarChart>
+        </BarChart> */}
         {/* <BarChart
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}

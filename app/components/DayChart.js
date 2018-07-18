@@ -20,11 +20,13 @@ export default class DayChart extends Component {
   render() {
     let data = this.props.clicks;
     console.log('test props in daychart render: ', this.props.clicks);
+    // const data = [ 50, 10, 40, 95, 85 ]
     return(
 
-      <View style={styles.card}>
+      <View style={{ flexDirection: 'row', height: 200, paddingVertical: 16 }}>
         <Text>Day chart:</Text>
-        {/* <BarChart
+
+        <BarChart
           style={{ flex: 1, margin: 15 }}
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
@@ -33,7 +35,7 @@ export default class DayChart extends Component {
           gridMin={0}
           >
           <Grid direction={Grid.Direction.VERTICAL}/>
-        </BarChart> */}
+        </BarChart>
       </View>
     )
 
