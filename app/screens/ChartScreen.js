@@ -5,8 +5,9 @@ import {
   View,
   FlatList
 } from 'react-native';
-import { BarChart, Grid } from 'react-native-svg-charts';
-import { DayChart } from '../components/DayChart';
+
+import Loading from '../components/Loading';
+import DayChart from '../components/DayChart';
 import * as firebase from 'firebase';
 require("firebase/firestore");
 
@@ -28,7 +29,8 @@ export default class ChartScreen extends Component {
     this.fbClickCollection = firebaseApp.firestore().collection('clicks');
     this.state = {
       isLoggedIn: false,
-      clicks: [0]
+      clicks: [0],
+      loading: true
     };
   }
 
@@ -44,7 +46,10 @@ export default class ChartScreen extends Component {
     console.log('userid: ', userId);
     this.fbClickCollection.doc(userId.toString()).get().then((doc) => {
       initialClicks = Object.keys(doc.data()).map((item) => parseInt(item) );
-      this.setState({ clicks: initialClicks });
+      this.setState({
+        clicks: initialClicks,
+        loading: false
+      });
     }).catch((error) => {
       console.log('error getting initial data');
       throw error;
@@ -70,13 +75,24 @@ export default class ChartScreen extends Component {
 
   render() {
     const chartFill = 'rgb(134, 65, 244)';
-    // let data = [ 10, 5, 25, 15, 20 ];
-    let data = this.state.clicks;
-    console.log('state clicks', this.state.clicks);
+    let data = [ 10, 5, 25, 15, 20 ];
+    // let data = this.state.clicks;
+
     return(
       <View>
         <Text>Chart Screen</Text>
-        <DayChart clicks={data}/>
+        <Loading loading={this.state.loading}/>
+        <DayChart clicks={this.state.clicks}/>
+        {/* <BarChart
+          style={{ flex: 1, margin: 15 }}
+          data={data}
+          svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
+          contentInset={{ top: 10, bottom: 10 }}
+          spacing={0.2}
+          gridMin={0}
+          >
+          <Grid direction={Grid.Direction.VERTICAL}/>
+        </BarChart> */}
         {/* <BarChart
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}

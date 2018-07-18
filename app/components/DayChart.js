@@ -5,6 +5,8 @@ import {
   View,
 } from 'react-native';
 
+import { BarChart, Grid } from 'react-native-svg-charts';
+
 export default class DayChart extends Component {
   constructor(props) {
     super(props);
@@ -16,13 +18,13 @@ export default class DayChart extends Component {
   }
 
   render() {
-    const data = this.props.clicks;
-
+    let data = this.props.clicks;
+    console.log('test props in daychart render: ', this.props.clicks);
     return(
 
       <View style={styles.card}>
         <Text>Day chart:</Text>
-        <BarChart
+        {/* <BarChart
           style={{ flex: 1, margin: 15 }}
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
@@ -31,7 +33,7 @@ export default class DayChart extends Component {
           gridMin={0}
           >
           <Grid direction={Grid.Direction.VERTICAL}/>
-        </BarChart>
+        </BarChart> */}
       </View>
     )
 
