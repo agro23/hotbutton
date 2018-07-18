@@ -10,12 +10,16 @@ import {
 
 import NavBar from '../components/NavBar';
 import DeviceCard from '../components/DeviceCard';
+import LoadModal from '../components/LoadModal';
 import * as firebase from 'firebase';
 
 export default class ButtonScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = { count: 0 }
+    this.state = {
+      count: 0,
+      loadingState: true
+    };
   }
 
   onPress = () => {

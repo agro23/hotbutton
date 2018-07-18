@@ -28,6 +28,7 @@ import BluetoothScreen from './screens/BluetoothScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
 import MainScreen from './screens/MainScreen';
+import LoadModal from './components/LoadModal';
 
 //to remove deprecation warning
 import { YellowBox } from 'react-native';
@@ -40,6 +41,7 @@ export default class App extends Component<Props> {
     BleManager.start({showAlert: true});
 
     this.state = {
+      loading: true,
       appState: '',
       connectedDevice: {},
       isConnected: false,
@@ -55,7 +57,10 @@ export default class App extends Component<Props> {
     firebase.auth().onAuthStateChanged((user) => {
       console.log('current user in app', user);
       if (user) {
-        this.setState({ currentUser: user });
+        this.setState({
+          currentUser: user,
+          loading: false
+         });
       } else {
         this.setState({ currentUser: {} });
       }
@@ -121,6 +126,7 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
+        <LoadModal loading={this.state.loading}/>
         <NavigationStack screenProps={{
           lastClick: this.state.lastClick,
           connectedDevice: this.state.connectedDevice,

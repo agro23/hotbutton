@@ -6,7 +6,9 @@ import {
   FlatList
 } from 'react-native';
 
-import Loading from '../components/Loading';
+import { BarChart, Grid } from 'react-native-svg-charts';
+
+import LoadModal from '../components/LoadModal';
 import DayChart from '../components/DayChart';
 import * as firebase from 'firebase';
 require("firebase/firestore");
@@ -75,15 +77,15 @@ export default class ChartScreen extends Component {
 
   render() {
     const chartFill = 'rgb(134, 65, 244)';
-    let data = [ 10, 5, 25, 15, 20 ];
-    // let data = this.state.clicks;
+    // let data = [ 10, 5, 25, 15, 20 ];
+    let data = this.state.clicks;
 
     return(
       <View>
         <Text>Chart Screen</Text>
-        <Loading loading={this.state.loading}/>
+        <LoadModal loading={this.state.loading}/>
         <DayChart clicks={this.state.clicks}/>
-        {/* <BarChart
+        <BarChart
           style={{ flex: 1, margin: 15 }}
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
@@ -92,7 +94,7 @@ export default class ChartScreen extends Component {
           gridMin={0}
           >
           <Grid direction={Grid.Direction.VERTICAL}/>
-        </BarChart> */}
+        </BarChart>
         {/* <BarChart
           data={data}
           svg={{ fill: 'rgba(134, 65, 244, 0.8)' }}
