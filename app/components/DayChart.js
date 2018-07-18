@@ -10,12 +10,36 @@ import { BarChart, Grid } from 'react-native-svg-charts';
 export default class DayChart extends Component {
   constructor(props) {
     super(props);
-
   }
 
   componentDidMount() {
-
+    this.filterClicks();
   }
+
+  filterClicks() {
+    let filteredClicks = [];
+    let dayEnd = Date.now();
+    let dayStart = Date.now() - (8.64*10e7);
+    this.props.clicks.forEach((click) => {
+      if (click < dayEnd && click > dayStart) {
+        filteredClicks.push(click);
+      }
+    })
+    this.mapClicksToHours(filteredClicks);
+  }
+
+  mapClicksToHours(clickArray) {
+    let hourMap = new Map();
+    clickArray.forEach((click) => {
+      let asDate = new Date(click);
+      let hourIndex = asDate.getHours();
+      let alreadyMapped = hourMap.get(hourIndex);
+      alreadyMapped.push(click);
+      hourMap.set(hourIndex, alreadyMapped);
+    });
+    console.log('hour map: ', hourMap);
+    }
+
 
   render() {
     let data = this.props.clicks;

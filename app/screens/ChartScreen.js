@@ -58,22 +58,6 @@ export default class ChartScreen extends Component {
     });
   }
 
-  listenForData(fbClickCollection) {
-    // var clicks = [];
-
-    // fbClickCollection.on('value', (snap) => {
-    //   snap.forEach((child) => {
-    //     clicks.push({
-    //       timestamp: child.timestamp,
-    //       _key: child.key
-    //     });
-    //   });
-    // });
-
-    // this.setState({
-    //   clicks: clicks
-    // });
-  }
 
   render() {
     const chartFill = 'rgb(134, 65, 244)';
