@@ -54,7 +54,8 @@ export default class ChartScreen extends Component {
       });
       console.log('all clicks from fb: ', initialClicks);
       this.processDayChartData(initialClicks);
-      this.processMinChartData(initialClicks);
+      // this.processMinChartData(initialClicks);
+      this.processTwoWeekChartData(initialClicks);
     }).catch((error) => {
       console.log('error getting initial data', error);
       throw error;
@@ -65,7 +66,7 @@ export default class ChartScreen extends Component {
     //filter clicks to include only past 24 hours:
     let filteredClicks = [];
     let dayEnd = Date.now();
-    let dayStart = Date.now() - (8.64*10e7);
+    let dayStart = Date.now() - (8.64e7);
     clickArray.forEach((click) => {
       if (click < dayEnd && click > dayStart) {
         filteredClicks.push(click);
@@ -136,6 +137,35 @@ export default class ChartScreen extends Component {
       minEnd += 60000;
     }
     console.log('formatted minute chart data: ', formattedData);
+  }
+
+  processTwoWeekChartData(clickArray) {
+    //filter
+    let periodEnd = Date.now();
+    let periodStart = periodEnd - 1.21e9;
+    let filteredClicks = [];
+    clickArray.forEach((click) => {
+      if (click >= periodStart && click <= periodEnd) {
+        filteredClicks.push(click);
+      }
+    });
+
+    //format
+    let dayStart = periodStart;
+    let dayEnd = dayStart + 8.64e7;
+    let formattedData = [];
+    for(i=0; i<14; i++) {
+      let dayCount = 0;
+      filteredClicks.forEach((click) => {
+        if (click >= dayStart && click < dayEnd) {
+          dayCount += 1;
+        }
+      });
+      formattedData.push({day: i, clicks: dayCount});
+      dayStart += 8.64e7;
+      dayEnd += 8.64e7;
+      console.log('formatted two weeks data: ', formattedData);
+    }
   }
 
   render() {
