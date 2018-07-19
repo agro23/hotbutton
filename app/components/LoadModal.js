@@ -12,12 +12,10 @@ const LoadModal = props => {
     ...attributes
   } = props;
 
-let fillFunction = () => console.log('hiii');
-
 return (
     <Modal
       visible={loading}
-      onRequestClose={fillFunction()}>
+      onRequestClose={() => null}>
       <View style={styles.container}>
         <ActivityIndicator animating={loading}/>
       </View>

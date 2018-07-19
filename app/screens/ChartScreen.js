@@ -54,6 +54,7 @@ export default class ChartScreen extends Component {
       });
       console.log('all clicks from fb: ', initialClicks);
       this.processDayChartData(initialClicks);
+      this.processMinChartData(initialClicks);
     }).catch((error) => {
       console.log('error getting initial data', error);
       throw error;
@@ -108,10 +109,32 @@ export default class ChartScreen extends Component {
   processMinChartData(clickArray) {
     let filteredClicks = [];
     let periodEnd = Date.now();
-    let periodStart = periodEnd - (1.8*10e6);
+    let periodStart = periodEnd - (1.8*10e5);
+    clickArray.forEach((click) => {
+      if (click >= periodStart && click <= periodEnd) {
+        filteredClicks.push(click)
+      }
+    });
+    console.log('filtered for past 30 minutes: ', filteredClicks);
+
+    //loop through minutes of period, checking filtered clicks for each minute
+    let formattedData = [];
     let minStart = periodStart;
     let minEnd = minStart + 60000;
-    
+    for (i=0; i<30; i++) {
+      let clickCounter = 0;
+      filteredClicks.forEach((click) => {
+        if (click >= minStart && click < minEnd) {
+          //remove that value from bank for efficiency
+          filteredClicks.splice(filteredClicks.indexOf(click), 1);
+          clickCounter++;
+        }
+      });
+      formattedData.push({minute: i, clicks: clickCounter})
+      minStart += 60000;
+      minEnd += 60000;
+    }
+    console.log('formatted minute chart data: ', formattedData);
   }
 
   render() {
