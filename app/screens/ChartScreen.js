@@ -71,7 +71,8 @@ export default class ChartScreen extends Component {
       }
     })
 
-    // map clicks to 24 hours, can probably skip this step and go straight to formatted array for chart:
+
+    //map clicks to 24 hours, can probably skip this step and go straight to formatted array for chart:
     let hourMap = new Map();
     filteredClicks.forEach((click) => {
       let asDate = new Date(click);
@@ -89,13 +90,22 @@ export default class ChartScreen extends Component {
       hours.push(i);
     }
     hours.forEach((hour) => {
-
-      let val = hourMap.get(hour) || [];
-      chartData.push(val.length);
+      let clicks = hourMap.get(hour) || [];
+      let formatHr = '';
+      if (hour <= 12) {
+        formatHr = hour.toString() + 'a';
+      } else {
+        formatHr = (hour - 12).toString() + 'p';
+      }
+      chartData.push({
+        hour: formatHr,
+        clicks : clicks.length
+      });
     });
     console.log('formatted data: ', chartData);
     this.setState({dayData: chartData});
   }
+
 
 
   render() {
