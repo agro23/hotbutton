@@ -54,10 +54,13 @@ export default class ChartScreen extends Component {
       });
       console.log('all clicks from fb: ', initialClicks);
       this.processDayChartData(initialClicks);
-      // this.processMinChartData(initialClicks);
+      this.processMinChartData(initialClicks);
       this.processTwoWeekChartData(initialClicks);
     }).catch((error) => {
       console.log('error getting initial data', error);
+      this.setState({
+        loading: false
+      })
       throw error;
     });
   }
@@ -103,14 +106,14 @@ export default class ChartScreen extends Component {
         clicks : clicks.length
       });
     });
-    // console.log('formatted data: ', chartData);
+    console.log('formatted day data: ', chartData);
     this.setState({dayData: chartData});
   }
 
   processMinChartData(clickArray) {
     let filteredClicks = [];
     let periodEnd = Date.now();
-    let periodStart = periodEnd - (1.8*10e5);
+    let periodStart = periodEnd - 1.8e6;
     clickArray.forEach((click) => {
       if (click >= periodStart && click <= periodEnd) {
         filteredClicks.push(click)
@@ -124,14 +127,14 @@ export default class ChartScreen extends Component {
     let minEnd = minStart + 60000;
     for (i=0; i<30; i++) {
       let clickCounter = 0;
-      filteredClicks.forEach((click) => {
+      for (j=filteredClicks.length-1; j>=0; j--) {
+        let click = filteredClicks[j];
         if (click >= minStart && click < minEnd) {
           //remove that value from bank for efficiency
-          filteredClicks.splice(filteredClicks.indexOf(click), 1);
+          filteredClicks.splice(j, 1);
           clickCounter += 1;
-          console.log(filteredClicks, clickCounter);
         }
-      });
+      }
       formattedData.push({minute: i, clicks: clickCounter})
       minStart += 60000;
       minEnd += 60000;
@@ -155,17 +158,19 @@ export default class ChartScreen extends Component {
     let dayEnd = dayStart + 8.64e7;
     let formattedData = [];
     for(i=0; i<14; i++) {
-      let dayCount = 0;
-      filteredClicks.forEach((click) => {
+      let dayClickCount = 0;
+      for(j=filteredClicks.length - 1; j >= 0; j--) {
+        let click = filteredClicks[j];
         if (click >= dayStart && click < dayEnd) {
-          dayCount += 1;
+          filteredClicks.splice(j,1);
+          dayClickCount += 1;
         }
-      });
-      formattedData.push({day: i, clicks: dayCount});
+      }
+      formattedData.push({day: i, clicks: dayClickCount});
       dayStart += 8.64e7;
       dayEnd += 8.64e7;
-      console.log('formatted two weeks data: ', formattedData);
     }
+    console.log('formatted two weeks data: ', formattedData);
   }
 
   render() {
