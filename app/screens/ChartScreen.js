@@ -33,7 +33,7 @@ export default class ChartScreen extends Component {
       isLoggedIn: false,
       clicks: [0],
       loading: true,
-      dayData: new Map() //day will be default, i.e. data auto processes here
+      dayData: [0] //day will be default, i.e. data auto processes here
     };
   }
 
@@ -61,7 +61,7 @@ export default class ChartScreen extends Component {
   }
 
   processDayChartData(clickArray) {
-    //filter clicks to include only past 24 hours
+    //filter clicks to include only past 24 hours:
     let filteredClicks = [];
     let dayEnd = Date.now();
     let dayStart = Date.now() - (8.64*10e7);
@@ -70,9 +70,8 @@ export default class ChartScreen extends Component {
         filteredClicks.push(click);
       }
     })
-    console.log('filtered clicks: ', filteredClicks);
 
-    // map clicks to 24 hours
+    // map clicks to 24 hours, can probably skip this step and go straight to formatted array for chart:
     let hourMap = new Map();
     filteredClicks.forEach((click) => {
       let asDate = new Date(click);
@@ -81,22 +80,33 @@ export default class ChartScreen extends Component {
       alreadyMapped.push(click);
       hourMap.set(hourIndex, alreadyMapped);
     });
-    console.log('hour map: ', hourMap);
-    this.setState(dayData: hourMap);
+    console.log('hourmap: ', hourMap);
+
+    //reformat into array for charting:
+    let chartData = [];
+    let hours = [];
+    for (i=0; i<24; i++) {
+      hours.push(i);
+    }
+    hours.forEach((hour) => {
+
+      let val = hourMap.get(hour) || [];
+      chartData.push(val.length);
+    });
+    console.log('formatted data: ', chartData);
+    this.setState({dayData: chartData});
   }
 
 
   render() {
-    const chartFill = 'rgb(134, 65, 244)';
-    // let data = [ 10, 5, 25, 15, 20 ];
-    let data = this.state.clicks;
 
     return(
       <View>
         <Text>Chart Screen</Text>
         <LoadModal loading={this.state.loading}/>
-        <DayChart clicks={this.state.clicks}/>
-
+        <DayChart
+          clicks={this.state.clicks}
+          formattedClicks={this.state.dayData}/>
         <FlatList
           data={this.state.clicks}
           keyExtractor={(item, index) => index.toString()}

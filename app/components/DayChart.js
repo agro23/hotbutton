@@ -42,7 +42,10 @@ export default class DayChart extends Component {
 
 
   render() {
-    let data = this.props.clicks;
+    let data = this.props.formattedClicks;
+    
+    console.log('clicks: ', data);
+    console.log('formatted clicks: ', this.props.formattedClicks);
     // const data = [ 50, 10, 40, 95, 85 ]
     return(
 
