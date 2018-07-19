@@ -143,7 +143,8 @@ export default class BluetoothScreen extends Component {
             console.log('connected peripheral object:', p);
             this.setState({
               peripherals,
-              connectedDevice: p
+              connectedDevice: p,
+              isConnected: true
             });
           }
           this.retrieveServicesAndCharacteristics(peripheral.id);

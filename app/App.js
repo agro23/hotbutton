@@ -62,7 +62,10 @@ export default class App extends Component<Props> {
           loading: false
          });
       } else {
-        this.setState({ currentUser: {} });
+        this.setState({
+          currentUser: {},
+          loading: false
+         });
       }
     });
   }

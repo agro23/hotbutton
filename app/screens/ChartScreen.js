@@ -71,7 +71,6 @@ export default class ChartScreen extends Component {
       }
     })
 
-
     //map clicks to 24 hours, can probably skip this step and go straight to formatted array for chart:
     let hourMap = new Map();
     filteredClicks.forEach((click) => {
@@ -106,10 +105,16 @@ export default class ChartScreen extends Component {
     this.setState({dayData: chartData});
   }
 
-
+  processMinChartData(clickArray) {
+    let filteredClicks = [];
+    let periodEnd = Date.now();
+    let periodStart = periodEnd - (1.8*10e6);
+    let minStart = periodStart;
+    let minEnd = minStart + 60000;
+    
+  }
 
   render() {
-
     return(
       <View>
         <Text>Chart Screen</Text>

@@ -29,7 +29,7 @@ export default class ButtonScreen extends Component {
     });
     //count in db if a user is logged in
     let user = this.props.screenProps.currentUser
-    if (user != null) {
+    if (user.uid) {
       let clickTime = Date.now()
       this.logClickToUser(user.uid, clickTime);
     }
