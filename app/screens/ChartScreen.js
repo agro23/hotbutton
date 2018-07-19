@@ -81,7 +81,7 @@ export default class ChartScreen extends Component {
       alreadyMapped.push(click);
       hourMap.set(hourIndex, alreadyMapped);
     });
-    console.log('hourmap: ', hourMap);
+    // console.log('hourmap: ', hourMap);
 
     //reformat into array for charting:
     let chartData = [];
@@ -102,7 +102,7 @@ export default class ChartScreen extends Component {
         clicks : clicks.length
       });
     });
-    console.log('formatted data: ', chartData);
+    // console.log('formatted data: ', chartData);
     this.setState({dayData: chartData});
   }
 
@@ -127,7 +127,8 @@ export default class ChartScreen extends Component {
         if (click >= minStart && click < minEnd) {
           //remove that value from bank for efficiency
           filteredClicks.splice(filteredClicks.indexOf(click), 1);
-          clickCounter++;
+          clickCounter += 1;
+          console.log(filteredClicks, clickCounter);
         }
       });
       formattedData.push({minute: i, clicks: clickCounter})
