@@ -181,12 +181,6 @@ export default class ChartScreen extends Component {
         <DayChart
           clicks={this.state.clicks}
           formattedClicks={this.state.dayData}/>
-        <FlatList
-          data={this.state.clicks}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => <Text>{item}</Text>}
-          >
-        </FlatList>
       </View>
     )
   }
