@@ -151,8 +151,8 @@ export default class BluetoothScreen extends Component {
         }).catch((error) => {
           console.log('Connection error', error);
         });
-        BleManager.stopScan();
       }
+      BleManager.stopScan();
     }
   }
 

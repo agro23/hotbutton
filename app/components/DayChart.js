@@ -18,8 +18,7 @@ export default class DayChart extends Component {
 
   render() {
     let data = this.props.formattedClicks;
-    // let yLabelData = data.map((entry) => entry.hour);
-    // console.log('y axis lables', yLabelData);
+
     const otherData = [ 14, 80, 100, 55 ];
 
     const lastData = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80, 150 ]
@@ -34,7 +33,8 @@ export default class DayChart extends Component {
         <View style={{ flexDirection: 'row', height: 200, padding: 20 }}>
           <YAxis
               data={data}
-              style={{ marginBottom: xAxisHeight }}
+              yAccessor={({item}) => item.clicks}
+              style={{ width: 20, marginBottom: xAxisHeight }}
               contentInset={verticalContentInset}
               svg={axesSvg}
           />
@@ -45,19 +45,19 @@ export default class DayChart extends Component {
               yAccessor={ ({item}) => item.clicks }
               // xAccessor={ ({item}) => item.hour }
               svg={{ fill: 'rgba(134, 65, 244, 0.8)', }}
-              // contentInset={{ top: 10, bottom: 10 }}
-              // spacing={0.2}
+              // spacingInner={0.2}
               // gridMin={0}
+              contentInset={verticalContentInset}
               >
-              <Grid direction={Grid.Direction.HORIZONTAL}/>
+              <Grid direction={Grid.Direction.VERTICAL}/>
             </BarChart>
             <XAxis
-              style={{ marginTop: 10 }}
+              style={{  height: xAxisHeight }}
               data={ data }
-              // scale={scale.scaleBand}
-              contentInset={{ top: 10, bottom: 10 }}
+              formatLabel={(value, index) => index}
+              contentInset={{ left: 10, right: 10 }}
+              svg={axesSvg}
               labelStyle={ { color: 'black' } }
-              xAccessor={ ({item}) => item.hour }
             />
 
           </View>
@@ -89,10 +89,10 @@ export default class DayChart extends Component {
           />
           <View style={{ flex: 1, marginLeft: 10 }}>
             <LineChart
-                style={{ flex: 1 }}
-                data={lastData}
-                contentInset={verticalContentInset}
-                svg={{ stroke: 'rgb(134, 65, 244)' }}
+              style={{ flex: 1 }}
+              data={lastData}
+              contentInset={verticalContentInset}
+              svg={{ stroke: 'rgb(134, 65, 244)' }}
             >
               <Grid/>
             </LineChart>
