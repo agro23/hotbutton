@@ -10,6 +10,7 @@ import { BarChart, Grid } from 'react-native-svg-charts';
 
 import LoadModal from '../components/LoadModal';
 import DayChart from '../components/DayChart';
+import MinChart from '../components/MinChart';
 import * as firebase from 'firebase';
 require("firebase/firestore");
 
@@ -33,7 +34,8 @@ export default class ChartScreen extends Component {
       isLoggedIn: false,
       clicks: [0],
       loading: true,
-      dayData: [0] //day will be default, i.e. data auto processes here
+      dayData: [0], //day will be default, i.e. data auto processes here
+      minData: [0]
     };
   }
 
@@ -140,6 +142,7 @@ export default class ChartScreen extends Component {
       minEnd += 60000;
     }
     console.log('formatted minute chart data: ', formattedData);
+    this.setState({ minData: formattedData });
   }
 
   processTwoWeekChartData(clickArray) {
@@ -176,11 +179,12 @@ export default class ChartScreen extends Component {
   render() {
     return(
       <View>
-        <Text>Chart Screen</Text>
         <LoadModal loading={this.state.loading}/>
         <DayChart
           clicks={this.state.clicks}
           formattedClicks={this.state.dayData}/>
+        {/* <MinChart
+          formattedClicks={this.state.minData}/> */}
       </View>
     )
   }
