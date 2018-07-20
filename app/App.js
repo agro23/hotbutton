@@ -51,7 +51,7 @@ export default class App extends Component<Props> {
       currentUser: {}
     };
 
-    this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
+    // this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     this.handleAppStateChange = this.handleAppStateChange.bind(this);
     //get current user with observer on Auth
     firebase.auth().onAuthStateChanged((user) => {
@@ -72,13 +72,17 @@ export default class App extends Component<Props> {
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
-    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+    // this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
   }
 
-  handleUpdateValueForCharacteristic(data) {
-    console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
-    this.setState({ lastClick: data.value });
+  componentWillUnmount() {
+    // this.handlerUpdate.remove();
   }
+
+  // handleUpdateValueForCharacteristic(data) {
+  //   console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+  //   this.setState({ lastClick: data.value });
+  // }
 
   handleAppStateChange(nextAppState) {
     if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {

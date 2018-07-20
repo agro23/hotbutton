@@ -46,20 +46,20 @@ export default class BluetoothScreen extends Component {
     }
 
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
-    this.handleStopScan = this.handleStopScan.bind(this);
+    // this.handleStopScan = this.handleStopScan.bind(this);
     this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
-    this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
+    // this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
 
   }
 
   componentDidMount() {
     console.log('test screenprops', this.props.screenProps);
-    BleManager.start({showAlert: true});
+    // BleManager.start({showAlert: true});
 
     this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
     this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
     this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
-    this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+    // this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
 
     if (Platform.OS === 'android' && Platform.Version >= 23) {
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
@@ -82,28 +82,28 @@ export default class BluetoothScreen extends Component {
     this.handlerDiscover.remove();
     this.handlerStop.remove();
     this.handlerDisconnect.remove();
-    this.handlerUpdate.remove();
+    // this.handlerUpdate.remove();
   }
 
-  handleDisconnectedPeripheral(data) {
-    let peripherals = this.state.peripherals;
-    let peripheral = peripherals.get(data.peripheral);
-    if (peripheral) {
-      peripheral.connected = false;
-      peripherals.set(peripheral.id, peripheral);
-      this.setState({peripherals});
-    }
-    console.log('Disconnected from ' + data.peripheral);
-  }
+  // handleDisconnectedPeripheral(data) {
+  //   let peripherals = this.state.peripherals;
+  //   let peripheral = peripherals.get(data.peripheral);
+  //   if (peripheral) {
+  //     peripheral.connected = false;
+  //     peripherals.set(peripheral.id, peripheral);
+  //     this.setState({peripherals});
+  //   }
+  //   console.log('Disconnected from ' + data.peripheral);
+  // }
 
   handleUpdateValueForCharacteristic(data) {
     console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
     this.setState({subscribedCharacteristic: data.value});
   }
 
-  handleStopScan() {
-    this.setState({ scanning: false });
-  }
+  // handleStopScan() {
+  //   this.setState({ scanning: false });
+  // }
 
   handleDiscoverPeripheral(peripheral){
     console.log('peripheral handler fired');
@@ -119,7 +119,7 @@ export default class BluetoothScreen extends Component {
     console.log('starting scan');
     if (!this.state.scanning) {
       try {
-        BleManager.scan([], 120, false).then((results) => {
+        BleManager.scan([], 30, false).then((results) => {
           this.setState({scanning:true});
         });
       } catch(error) {
@@ -129,10 +129,12 @@ export default class BluetoothScreen extends Component {
   }
 
   connect(peripheral) {
+    BleManager.stopScan();
+    // this.setState({ scanning: false });
     if (peripheral){
       if (peripheral.connected){
         BleManager.disconnect(peripheral.id);
-        this.setState({isConnected: false});
+        this.setState({ isConnected: false });
       }else{
         BleManager.connect(peripheral.id).then(() => {
           let peripherals = this.state.peripherals;
@@ -152,7 +154,6 @@ export default class BluetoothScreen extends Component {
           console.log('Connection error', error);
         });
       }
-      BleManager.stopScan();
     }
   }
 
