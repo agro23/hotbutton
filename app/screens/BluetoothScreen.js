@@ -130,35 +130,27 @@ export default class BluetoothScreen extends Component {
 
   connect(peripheral) {
     BleManager.stopScan();
-    // this.setState({ scanning: false });
-    if (peripheral){
-      if (peripheral.connected){
-        BleManager.disconnect(peripheral.id);
-        this.setState({ isConnected: false });
-      }else{
-        BleManager.connect(peripheral.id).then(() => {
-          let peripherals = this.state.peripherals;
-          let p = peripherals.get(peripheral.id);
-          if (p) {
-            p.connected = true;
-            peripherals.set(peripheral.id, p);
-            console.log('connected peripheral object:', p);
-            this.setState({
-              peripherals,
-              connectedDevice: p,
-              isConnected: true
-            });
-          }
-          this.retrieveServicesAndCharacteristics(peripheral.id);
-        }).catch((error) => {
-          console.log('Connection error', error);
+    this.setState({ scanning: false });
+    BleManager.connect(peripheral.id).then(() => {
+      let peripherals = this.state.peripherals;
+      let p = peripherals.get(peripheral.id);
+      if (p) {
+        p.connected = true;
+        peripherals.set(peripheral.id, p);
+        console.log('connected peripheral object:', p);
+        this.setState({
+          peripherals,
+          connectedDevice: p,
+          isConnected: true
         });
       }
-    }
+      this.retrieveServicesAndCharacteristics(peripheral.id);
+    }).catch((error) => {
+      console.log('Connection error', error);
+    });
   }
 
   retrieveServicesAndCharacteristics(peripheralId) {
-
     setTimeout(() => {
       BleManager.retrieveServices(peripheralId).then((serviceData) => {
         // add that data to state
