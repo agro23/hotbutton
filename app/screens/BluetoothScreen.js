@@ -158,28 +158,36 @@ export default class BluetoothScreen extends Component {
   }
 
   retrieveServicesAndCharacteristics(peripheralId) {
-    BleManager.retrieveServices(peripheralId).then((serviceData) => {
-      // add that data to state
-      this.setState({
-        connectedServices: serviceData.services,
-        connectedCharacteristics: serviceData.characteristics
-      });
-      this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
-      this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
-    }).catch((error) => console.log('Error retrieving peripheral services: ', error));
+
+    setTimeout(() => {
+      BleManager.retrieveServices(peripheralId).then((serviceData) => {
+        // add that data to state
+        this.setState({
+          connectedServices: serviceData.services,
+          connectedCharacteristics: serviceData.characteristics
+        });
+        this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
+        this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
+      }).catch((error) => console.log('Error retrieving peripheral services: ', error));
+    }, 900);
   }
 
   subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
     console.log('adding subscriction to characteristic with id: ', characteristicId);
-    BleManager.startNotification(peripheralId, serviceId, characteristicId);
-    bleManagerEmitter.addListener(
-      'BleManagerDidUpdateValueForCharacteristic',
-      ({ value }) => {
-        // Convert bytes array to string here
-        console.log('value in change listener', value);
-        this.setState({subscribedCharacteristic: value});
-      }
-    );
+
+    setTimeout(() => {
+      BleManager.startNotification(peripheralId, serviceId, characteristicId)
+      .then(console.log('Started notification on characteristic: ', characteristicId);)
+      .catch((error) => console.log('Error subscribin to characteristic'));
+      // bleManagerEmitter.addListener(
+      //   'BleManagerDidUpdateValueForCharacteristic',
+      //   ({ value }) => {
+      //     // Convert bytes array to string here
+      //     console.log('value in change listener', value);
+      //     this.setState({subscribedCharacteristic: value});
+      //   }
+      // );
+    }, 200);
   }
 
   disconnectDevice() {
