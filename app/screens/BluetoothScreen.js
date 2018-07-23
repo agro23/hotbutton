@@ -162,14 +162,14 @@ export default class BluetoothScreen extends Component {
             this.BleManager.startNotification(peripheral.id, customServiceId, clickCharId)
             .then(() => { console.log('Started notification on characteristic: ', clickCharId) })
             .catch((error) => { console.log('Error subscribing to characteristic') });
-            // this.BleManagerEmitter.addListener(
-            //   'BleManagerDidUpdateValueForCharacteristic',
-            //   ({ value }) => {
-            //     // Convert bytes array to string here
-            //     console.log('value in change listener', value);
-            //     this.setState({subscribedCharacteristicValue: value});
-            //   }
-            // );
+            this.BleManagerEmitter.addListener(
+              'BleManagerDidUpdateValueForCharacteristic',
+              ({ value }) => {
+                // Convert bytes array to string here
+                console.log('value in char change listener', value);
+                this.setState({subscribedCharacteristicValue: value});
+              }
+            );
           }, 200);
           // this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
         }).catch((error) => console.log('Error retrieving peripheral services: ', error));
