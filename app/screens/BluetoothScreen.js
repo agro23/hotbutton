@@ -49,7 +49,7 @@ export default class BluetoothScreen extends Component {
 
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
     // this.handleStopScan = this.handleStopScan.bind(this);
-    // this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
+    this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     // this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
 
   }
@@ -60,7 +60,7 @@ export default class BluetoothScreen extends Component {
     this.handlerDiscover = this.BleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
     // this.handlerStop = this.BleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
     // this.handlerDisconnect = this.BleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
-    // this.handlerUpdate = this.BleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+    this.handlerUpdate = this.BleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
 
     if (Platform.OS === 'android' && Platform.Version >= 23) {
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
@@ -84,7 +84,7 @@ export default class BluetoothScreen extends Component {
     this.handlerDiscover.remove();
     // this.handlerStop.remove();
     // this.handlerDisconnect.remove();
-    //this.handlerUpdate.remove();
+    this.handlerUpdate.remove();
   }
 
   // handleDisconnectedPeripheral(data) {
@@ -102,10 +102,10 @@ export default class BluetoothScreen extends Component {
   //   console.log('Disconnected from ' + data.peripheral);
   // }
   //
-  // handleUpdateValueForCharacteristic(data) {
-  //   console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
-  //   this.setState({subscribedCharacteristicValue: data.value});
-  // }
+  handleUpdateValueForCharacteristic(data) {
+    console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+    this.setState({subscribedCharacteristicValue: data.value});
+  }
 
   // handleStopScan() {
   //   this.setState({ scanning: false });
@@ -162,14 +162,14 @@ export default class BluetoothScreen extends Component {
             this.BleManager.startNotification(peripheral.id, customServiceId, clickCharId)
             .then(() => { console.log('Started notification on characteristic: ', clickCharId) })
             .catch((error) => { console.log('Error subscribing to characteristic') });
-            this.BleManagerEmitter.addListener(
-              'BleManagerDidUpdateValueForCharacteristic',
-              ({ value }) => {
-                // Convert bytes array to string here
-                console.log('value in char change listener', value);
-                this.setState({subscribedCharacteristicValue: value});
-              }
-            );
+            // this.BleManagerEmitter.addListener(
+            //   'BleManagerDidUpdateValueForCharacteristic',
+            //   ({ value }) => {
+            //     // Convert bytes array to string here
+            //     console.log('value in char change listener', value);
+            //     this.setState({subscribedCharacteristicValue: value});
+            //   }
+            // );
           }, 200);
           // this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
         }).catch((error) => console.log('Error retrieving peripheral services: ', error));
