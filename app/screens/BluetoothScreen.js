@@ -227,9 +227,6 @@ export default class BluetoothScreen extends Component {
 
         {disconnectButton}
 
-        {/* <Text>Connected device: {this.state.connectedDevice.name}</Text>
-        <Text>ID: {this.state.connectedDevice.id}</Text> */}
-        {/* <Text>Milliseconds at last press: {this.state.subscribedCharacteristicValue}</Text> */}
         <ScrollView style={styles.scroll}>
           {(list.length == 0) &&
             <View style={{flex:1, margin: 20}}>
