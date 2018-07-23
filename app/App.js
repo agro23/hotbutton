@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -18,7 +12,7 @@ import {
 import * as firebase from 'firebase';
 import BleManager from 'react-native-ble-manager';
 const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 import { createStackNavigator } from 'react-navigation';
 import ButtonScreen from './screens/ButtonScreen';
@@ -72,7 +66,7 @@ export default class App extends Component<Props> {
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
-    // this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+    // this.handlerUpdate = BleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
   }
 
   componentWillUnmount() {
@@ -107,20 +101,20 @@ export default class App extends Component<Props> {
     // });
   }
 
-  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
-    console.log('adding subscriction to characteristic with id: ', characteristicId);
-    BleManager.startNotification(peripheralId, serviceId, characteristicId);
-    bleManagerEmitter.addListener(
-      'BleManagerDidUpdateValueForCharacteristic',
-      ({ value }) => {
-        // Convert bytes array to string here
-        console.log('value in change listener', value);
-        let convertedMillis = this.convertToString(value);
-        this.setState({subscribedCharacteristic: value});
-        console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
-      }
-    );
-  }
+  // subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
+  //   console.log('adding subscriction to characteristic with id: ', characteristicId);
+  //   BleManager.startNotification(peripheralId, serviceId, characteristicId);
+  //   BleManagerEmitter.addListener(
+  //     'BleManagerDidUpdateValueForCharacteristic',
+  //     ({ value }) => {
+  //       // Convert bytes array to string here
+  //       console.log('value in change listener', value);
+  //       let convertedMillis = this.convertToString(value);
+  //       this.setState({subscribedCharacteristic: value});
+  //       console.log(`Value changed for subscribed characteristic to: ${convertedMillis}`);
+  //     }
+  //   );
+  // }
 
   convertToString(numArray) {
     let string = '';
@@ -135,6 +129,8 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <LoadModal loading={this.state.loading}/>
         <NavigationStack screenProps={{
+          BleManager: BleManager,
+          BleManagerEmitter: BleManagerEmitter,
           lastClick: this.state.lastClick,
           connectedDevice: this.state.connectedDevice,
           setDeviceInfo: (deviceObject, serviceId, charId) => this.setDeviceInfo(deviceObject, serviceId, charId), //callback to be used for global pairing

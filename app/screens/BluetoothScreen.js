@@ -15,8 +15,6 @@ import {
 } from 'react-native';
 
 import DeviceCard from '../components/DeviceCard';
-import BleManager from 'react-native-ble-manager';
-
 const uartServiceId = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
 const rxCharId = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
 const txCharId = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
@@ -24,16 +22,17 @@ const txCharId = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
 const customServiceId = "9e5c00cc-7541-4205-8df1-74f41e2fb968";
 const clickCharId = "0001";
 
-const BleManagerModule = NativeModules.BleManager;
-const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+//import BleManager from 'react-native-ble-manager';
+// const BleManagerModule = NativeModules.BleManager;
+// const bleManagerEmitter = new NativeEventEmitter(BleManagerModule);
 
 export default class BluetoothScreen extends Component {
   static navigationOptions = {
     title: 'Device Manager',
   }
 
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
 
     this.state = {
       scanning: false,
@@ -45,21 +44,23 @@ export default class BluetoothScreen extends Component {
       connectedCharacteristics: []
     }
 
+    this.BleManager = this.props.screenProps.BleManager;
+    this.BleManagerEmitter = this.props.screenProps.BleManagerEmitter;
+
     this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
     // this.handleStopScan = this.handleStopScan.bind(this);
-    this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
+    // this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
     // this.handleDisconnectedPeripheral = this.handleDisconnectedPeripheral.bind(this);
 
   }
 
   componentDidMount() {
-    console.log('test screenprops', this.props.screenProps);
-    // BleManager.start({showAlert: true});
+    console.log('bt screen mount');
 
-    this.handlerDiscover = bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
-    this.handlerStop = bleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
-    this.handlerDisconnect = bleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
-    // this.handlerUpdate = bleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
+    this.handlerDiscover = this.BleManagerEmitter.addListener('BleManagerDiscoverPeripheral', this.handleDiscoverPeripheral );
+    // this.handlerStop = this.BleManagerEmitter.addListener('BleManagerStopScan', this.handleStopScan );
+    // this.handlerDisconnect = this.BleManagerEmitter.addListener('BleManagerDisconnectPeripheral', this.handleDisconnectedPeripheral );
+    // this.handlerUpdate = this.BleManagerEmitter.addListener('BleManagerDidUpdateValueForCharacteristic', this.handleUpdateValueForCharacteristic );
 
     if (Platform.OS === 'android' && Platform.Version >= 23) {
         PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION).then((result) => {
@@ -79,10 +80,11 @@ export default class BluetoothScreen extends Component {
   }
 
   componentWillUnmount() {
+    console.log('bt screen unmount');
     this.handlerDiscover.remove();
-    this.handlerStop.remove();
-    this.handlerDisconnect.remove();
-    // this.handlerUpdate.remove();
+    // this.handlerStop.remove();
+    // this.handlerDisconnect.remove();
+    //this.handlerUpdate.remove();
   }
 
   // handleDisconnectedPeripheral(data) {
@@ -91,15 +93,19 @@ export default class BluetoothScreen extends Component {
   //   if (peripheral) {
   //     peripheral.connected = false;
   //     peripherals.set(peripheral.id, peripheral);
-  //     this.setState({peripherals});
+  //     this.setState({
+  //       peripherals: peripherals,
+  //       isConnected: false,
+  //       connectedDevice: {}
+  //     });
   //   }
   //   console.log('Disconnected from ' + data.peripheral);
   // }
-
-  handleUpdateValueForCharacteristic(data) {
-    console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
-    this.setState({subscribedCharacteristicValue: data.value});
-  }
+  //
+  // handleUpdateValueForCharacteristic(data) {
+  //   console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+  //   this.setState({subscribedCharacteristicValue: data.value});
+  // }
 
   // handleStopScan() {
   //   this.setState({ scanning: false });
@@ -119,7 +125,7 @@ export default class BluetoothScreen extends Component {
     console.log('starting scan');
     if (!this.state.scanning) {
       try {
-        BleManager.scan([], 30, false).then((results) => {
+        this.BleManager.scan([], 30, false).then((results) => {
           this.setState({scanning:true});
         });
       } catch(error) {
@@ -129,9 +135,9 @@ export default class BluetoothScreen extends Component {
   }
 
   connect(peripheral) {
-    BleManager.stopScan();
+    this.BleManager.stopScan();
     this.setState({ scanning: false });
-    BleManager.connect(peripheral.id).then(() => {
+    this.BleManager.connect(peripheral.id).then(() => {
       let peripherals = this.state.peripherals;
       let p = peripherals.get(peripheral.id);
       if (p) {
@@ -144,21 +150,19 @@ export default class BluetoothScreen extends Component {
           isConnected: true
         });
       }
-      // this.retrieveServicesAndCharacteristics(peripheral.id);
       setTimeout(() => {
-        BleManager.retrieveServices(peripheralId).then((serviceData) => {
+        this.BleManager.retrieveServices(peripheral.id).then((serviceData) => {
           // add that data to state
           this.setState({
             connectedServices: serviceData.services,
             connectedCharacteristics: serviceData.characteristics
           });
-          // this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
-          console.log('adding subscriction to characteristic with id: ', characteristicId);
+          console.log('adding subscriction to characteristic with id: ', clickCharId);
           setTimeout(() => {
-            BleManager.startNotification(peripheralId, serviceId, characteristicId)
-            .then(console.log('Started notification on characteristic: ', characteristicId);)
-            .catch((error) => console.log('Error subscribing to characteristic'));
-            // bleManagerEmitter.addListener(
+            this.BleManager.startNotification(peripheral.id, customServiceId, clickCharId)
+            .then(() => { console.log('Started notification on characteristic: ', clickCharId) })
+            .catch((error) => { console.log('Error subscribing to characteristic') });
+            // this.BleManagerEmitter.addListener(
             //   'BleManagerDidUpdateValueForCharacteristic',
             //   ({ value }) => {
             //     // Convert bytes array to string here
@@ -175,22 +179,12 @@ export default class BluetoothScreen extends Component {
     });
   }
 
-  retrieveServicesAndCharacteristics(peripheralId) {
-
-  }
-
-  subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
-
-  }
-
   disconnectDevice() {
     if(this.state.connectedDevice.id) {
-      BleManager.stopNotification(this.state.connectedDevice.id, customServiceId, clickCharId)
-        .then(console.log('Stopping notification on characteristic w/ id: ', clickCharId)
-        .catch((error) => {
-          console.log('Error stopping notification on characteristic.')
-        });
-      BleManager.disconnect(this.state.connectedDevice.id).then(() => {
+      this.BleManager.stopNotification(this.state.connectedDevice.id, customServiceId, clickCharId)
+        .then(() => { console.log('Stopping notification on characteristic w/ id: ', clickCharId) })
+        .catch((error) => { console.log('Error stopping notification on characteristic.', error) });
+      this.BleManager.disconnect(this.state.connectedDevice.id).then(() => {
         this.setState({
           connectedDevice: {},
           isConnected: false,
