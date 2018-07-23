@@ -102,9 +102,9 @@ export default class App extends Component<Props> {
       subscribedServiceId: serviceId,
       subscribedCharId: charId
     });
-    BleManager.retrieveServices(deviceObject.id).then(() => {
-      this.subscribeToCharacteristic(deviceObject.id, serviceId, charId);
-    });
+    // BleManager.retrieveServices(deviceObject.id).then(() => {
+    //   this.subscribeToCharacteristic(deviceObject.id, serviceId, charId);
+    // });
   }
 
   subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {

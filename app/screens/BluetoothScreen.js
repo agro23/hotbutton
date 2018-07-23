@@ -40,7 +40,7 @@ export default class BluetoothScreen extends Component {
       peripherals: new Map(),
       connectedDevice: {},
       isConnected: false,
-      subscribedCharacteristic: 'no clicks yet',
+      subscribedCharacteristicValue: 'no clicks yet',
       connectedServices: [],
       connectedCharacteristics: []
     }
@@ -98,7 +98,7 @@ export default class BluetoothScreen extends Component {
 
   handleUpdateValueForCharacteristic(data) {
     console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
-    this.setState({subscribedCharacteristic: data.value});
+    this.setState({subscribedCharacteristicValue: data.value});
   }
 
   // handleStopScan() {
@@ -144,51 +144,56 @@ export default class BluetoothScreen extends Component {
           isConnected: true
         });
       }
-      this.retrieveServicesAndCharacteristics(peripheral.id);
+      // this.retrieveServicesAndCharacteristics(peripheral.id);
+      setTimeout(() => {
+        BleManager.retrieveServices(peripheralId).then((serviceData) => {
+          // add that data to state
+          this.setState({
+            connectedServices: serviceData.services,
+            connectedCharacteristics: serviceData.characteristics
+          });
+          // this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
+          console.log('adding subscriction to characteristic with id: ', characteristicId);
+          setTimeout(() => {
+            BleManager.startNotification(peripheralId, serviceId, characteristicId)
+            .then(console.log('Started notification on characteristic: ', characteristicId);)
+            .catch((error) => console.log('Error subscribing to characteristic'));
+            // bleManagerEmitter.addListener(
+            //   'BleManagerDidUpdateValueForCharacteristic',
+            //   ({ value }) => {
+            //     // Convert bytes array to string here
+            //     console.log('value in change listener', value);
+            //     this.setState({subscribedCharacteristicValue: value});
+            //   }
+            // );
+          }, 200);
+          // this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
+        }).catch((error) => console.log('Error retrieving peripheral services: ', error));
+      }, 900);
     }).catch((error) => {
       console.log('Connection error', error);
     });
   }
 
   retrieveServicesAndCharacteristics(peripheralId) {
-    setTimeout(() => {
-      BleManager.retrieveServices(peripheralId).then((serviceData) => {
-        // add that data to state
-        this.setState({
-          connectedServices: serviceData.services,
-          connectedCharacteristics: serviceData.characteristics
-        });
-        this.subscribeToCharacteristic(peripheralId, uartServiceId, rxCharId); //subscription local to this screen, no longer used
-        this.props.screenProps.setDeviceInfo(this.state.connectedDevice, customServiceId, clickCharId);  //send subscription to App.js
-      }).catch((error) => console.log('Error retrieving peripheral services: ', error));
-    }, 900);
+
   }
 
   subscribeToCharacteristic(peripheralId, serviceId, characteristicId) {
-    console.log('adding subscriction to characteristic with id: ', characteristicId);
 
-    setTimeout(() => {
-      BleManager.startNotification(peripheralId, serviceId, characteristicId)
-      .then(console.log('Started notification on characteristic: ', characteristicId);)
-      .catch((error) => console.log('Error subscribin to characteristic'));
-      // bleManagerEmitter.addListener(
-      //   'BleManagerDidUpdateValueForCharacteristic',
-      //   ({ value }) => {
-      //     // Convert bytes array to string here
-      //     console.log('value in change listener', value);
-      //     this.setState({subscribedCharacteristic: value});
-      //   }
-      // );
-    }, 200);
   }
 
   disconnectDevice() {
     if(this.state.connectedDevice.id) {
+      BleManager.stopNotification(this.state.connectedDevice.id, customServiceId, clickCharId)
+        .then(console.log('Stopping notification on characteristic w/ id: ', clickCharId)
+        .catch((error) => {
+          console.log('Error stopping notification on characteristic.')
+        });
       BleManager.disconnect(this.state.connectedDevice.id).then(() => {
         this.setState({
           connectedDevice: {},
           isConnected: false,
-          subscribedCharacteristic: '',
           connectedServices: [],
           connectedCharacteristics: []
         })
@@ -218,7 +223,7 @@ export default class BluetoothScreen extends Component {
       <View style={styles.container}>
         <DeviceCard
           connectedDevice={this.state.connectedDevice}
-          lastClick={this.state.subscribedCharacteristic}
+          lastClick={this.state.subscribedCharacteristicValue}
         />
         <TouchableHighlight
           style={styles.scanButton}
@@ -230,7 +235,7 @@ export default class BluetoothScreen extends Component {
 
         {/* <Text>Connected device: {this.state.connectedDevice.name}</Text>
         <Text>ID: {this.state.connectedDevice.id}</Text> */}
-        {/* <Text>Milliseconds at last press: {this.state.subscribedCharacteristic}</Text> */}
+        {/* <Text>Milliseconds at last press: {this.state.subscribedCharacteristicValue}</Text> */}
         <ScrollView style={styles.scroll}>
           {(list.length == 0) &&
             <View style={{flex:1, margin: 20}}>
